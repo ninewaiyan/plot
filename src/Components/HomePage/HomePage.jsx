@@ -47,7 +47,8 @@ const HomePage = () => {
         lg={4}  // Each column takes up 4 grid spaces for 3 equal columns
       >
         
-        <Navigation></Navigation>
+         <Navigation></Navigation> 
+
       </Grid>
 
       {/* Middle Column */}
@@ -76,6 +77,7 @@ const HomePage = () => {
         lg={4}  // Each column takes up 4 grid spaces for 3 equal columns
       >
         <RightPart></RightPart>
+
       </Grid>
     </Grid>
   );

@@ -102,6 +102,7 @@ const HomeSection = () => {
                 </div>
 
             </section>
+            
             <section>
                 {[1,1,1,1,1].map((item)=><TweetCard></TweetCard>)}
                 

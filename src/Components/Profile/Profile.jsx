@@ -7,16 +7,18 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import TweetCard from '../HomeSection/TweetCard';
+import ProfileModal from './ProfileModal';
 
 const Profile = () => {
 
     const [tabValue,setTabValue] = useState("1")
     const navigate = useNavigate();
+    const [openProfileModal,setOpenProfileModal] = useState(false)
+    const handleOpenProfileModal =()=>setOpenProfileModal(true);
+    const handleClose =()=>setOpenProfileModal(false)
     const handleBack = () => navigate(-1)
 
-    const handleOpenProfileModel = () => {
-        console.log("open profile model")
-    }
+    
 
     const handleFollowUser = () => {
         console.log("open profile model")
@@ -59,7 +61,7 @@ const Profile = () => {
 
 
                         <Button
-                            onClick={handleOpenProfileModel}
+                            onClick={handleOpenProfileModal}
                             variant='contained' sx={{ borderRadius: "20px" }}
                         >
                             Edit Profile
@@ -143,6 +145,9 @@ const Profile = () => {
 
                     </TabContext>
                 </Box>
+            </section>
+            <section>
+                <ProfileModal handleClose={handleClose} open={openProfileModal}/>
             </section>
         </div>
     )
