@@ -50,8 +50,8 @@ export default function AuthModal({open,handleClose}) {
          sx={{borderRadius:"29px",py:"15px"}}
          >
             {location.pathname==="/signup"?"signin":"signup"}
-
-         </Button>
+ 
+         </Button> 
 
         </Box>
       </Modal>

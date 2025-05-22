@@ -3,8 +3,12 @@ import { navigationMenu } from "./NavigationMenu"
 import { Avatar, Button, Menu, MenuItem } from "@mui/material";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../Store/Auth/Action";
 const Navigation = () => {
 
+    const dispatch = useDispatch()
+    const {auth}=useSelector(store=>store)
     const [anchorEl, setAnchorEl] = React.useState  (null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -15,7 +19,8 @@ const Navigation = () => {
     };
     const navigate = useNavigate();
     const handleLogout=()=>{
-        console.log("logout")
+        console.log("logout");
+        dispatch(logout());
         handleClose()
     }
     return (
@@ -55,9 +60,9 @@ const Navigation = () => {
                             src='https://cdn.pixabay.com/photo/2023/05/02/10/35/avatar-7964945_1280.png'
                         />
                         <div>
-                            <span>Code With Zosh</span>
-                            <br></br>
-                            <span className='opacity-70'>@codewithzosh</span>
+                            <p>{auth.user?.fullName}</p>
+                            <span className='opacity-70'>
+                                @{auth.user?.fullName.split(" ").join("_").toLowerCase()}</span>
                         </div>
                         <Button
                             id="basic-button"
