@@ -7,6 +7,9 @@ import { useFormik } from 'formik';
 import CloseIcon from '@mui/icons-material/Close';
 import { Avatar, IconButton, TextField } from '@mui/material';
 import "./ProfileModal.css"
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUserProfile } from '../../Store/Auth/Action';
+import { uploadToCloudnary } from '../../Utils/uploadToCloudnary';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -24,11 +27,20 @@ const style = {
 export default function ProfileModal({open,handleClose}) {
     const [uploading, setUploading] = React.useState(false)
     // const [open, setOpen] = React.useState(false);
+    const dispatch = useDispatch();
+    const [selectedImage,setSelectedImage] = React.useState("")
+    const {auth} = useSelector(store=>store);
+
+    console.log("auth =>",auth)
+
+
 
    
 
     const handleSubmit = (values) => {
+        dispatch( updateUserProfile(values))
         console.log("handle submit",values)
+        setSelectedImage("")
     }
 
     const formik = useFormik({
@@ -52,12 +64,14 @@ export default function ProfileModal({open,handleClose}) {
 
     // }
 
-    const handleImageChange = (event) => {
+    const handleImageChange = async(event) => {
     setUploading(true);
     const { name, files } = event.target;
     if (files && files.length > 0) {
-        const file = files[0];
+        const file = await uploadToCloudnary(files[0])  ;
         formik.setFieldValue(name, file);
+        setSelectedImage(file);
+        console.log("auth => " ,auth)
     } else {
         console.warn("No file selected");
     }
@@ -105,7 +119,7 @@ export default function ProfileModal({open,handleClose}) {
                                     <div className="relative">
                                         <Avatar
                                         sx={{width:"10rem",height:"10rem",border:"4px solid white "}}
-                                         src="https://cdn.pixabay.com/photo/2022/12/24/21/14/portrait-7676482_1280.jpg"/>  
+                                        src={selectedImage||auth.user?.image}/>  
 
                                          <input
                                          className="absolute top-0 left-0 w-[10rem] h-full opacity-0 cursor-pointer"

@@ -1,11 +1,14 @@
 import { Avatar, Button } from '@mui/material'
 import { Formik, useFormik } from 'formik'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import ImageIcon from '@mui/icons-material/Image';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
 import TweetCard from './TweetCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { createTweet, getAllTweets } from '../../Store/Twit/Action';
+import { uploadToCloudnary } from '../../Utils/uploadToCloudnary';
 
 const validationSchema = Yup.object().shape({
     content: Yup.string().required("Tweet text is required ")
@@ -15,11 +18,24 @@ const HomeSection = () => {
 
     const [uploadingImage, setUploadingImage] = useState(false);
     const [selectImage, setSelectedImage] = useState("");
+    const dispatch = useDispatch();
+    const { twit } = useSelector(store => store);
+    console.log("twit", twit)
 
-    const handleSubmit =(values) => {
+
+    const handleSubmit = (values,actions) => {
+        dispatch(createTweet(values))
+        actions.resetForm()
         console.log("values", values)
-        
+        setSelectedImage("")
     }
+
+
+    useEffect(() => {
+        dispatch(getAllTweets())
+    }, [twit.like, twit.retwit])
+
+
 
     const formik = useFormik({
         initialValues: {
@@ -30,10 +46,10 @@ const HomeSection = () => {
         validationSchema
     })
 
-    const handleSelectImage = (event) => {
+    const handleSelectImage = async (event) => {
 
         setUploadingImage(true);
-        const imgUrl = event.target.files[0]
+        const imgUrl = await uploadToCloudnary(event.target.files[0])
         formik.setFieldValue("image", imgUrl);
         setSelectedImage(imgUrl);
         setUploadingImage(false);
@@ -55,7 +71,7 @@ const HomeSection = () => {
                             <div>
                                 <input type="text" name='content' placeholder='What is happening '
                                     className={`border-none outline-none text-xl bg-transparent`}
-                                    {...formik.getFieldProps("content")} />
+                                {...formik.getFieldProps("content")} />
                                 {formik.errors.content && formik.touched.content && (
                                     <span className='text-red-500'>{formik.errors.content}</span>
                                 )}
@@ -66,7 +82,7 @@ const HomeSection = () => {
 
                             </div> */}
                             <div className='flex justify-between items-center mt-5'>
-                                
+
                                 <div className='flex space-x-5 items-center'>
                                     <label className='flex items-center space-x-2 rounded-md cursor-pointer'>
 
@@ -97,15 +113,20 @@ const HomeSection = () => {
 
                         </form>
 
+                        <div>
+                            {selectImage && <img src={selectImage} alt="" />}
+                           
+                        </div>
+
                     </div>
 
                 </div>
 
             </section>
-            
+
             <section>
-                {[1,1,1,1,1].map((item)=><TweetCard></TweetCard>)}
-                
+                {twit.twits.map((item) => <TweetCard item={item} />)}
+
             </section>
 
         </div>
