@@ -13,14 +13,14 @@ import ReplyModal from './ReplyModal';
 import { useDispatch } from 'react-redux';
 import { createReTweet, likeTweet } from '../../Store/Twit/Action';
 
-const TweetCard = ({item}) => {
+const TweetCard = ({ item }) => {
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
     const dispatch = useDispatch();
 
-    
+
 
     const [openReplyModal, setOpenReplyModal] = useState(false)
     const handleOpenReplyModal = () => setOpenReplyModal(true);
@@ -42,7 +42,7 @@ const TweetCard = ({item}) => {
         handleClose();
     }
 
-  
+
 
     const handleCreateRetweet = () => {
 
@@ -74,7 +74,7 @@ const TweetCard = ({item}) => {
                 <div className="w-full">
                     <div className="flex justify-between items-center">
                         <div className="flex cursor-pointer items-center space-x-2  ">
-                            
+
                             <span className='font-semibold'>{item?.user?.fullName}</span>
                             <span className='text-grey-600 '>
                                 @{item?.user?.fullName.split(" ").join("_").toLowerCase()} . 2m</span>
@@ -113,10 +113,19 @@ const TweetCard = ({item}) => {
                         <div className="cursor-pointer"
                             onClick={() => navigate(`/twit/${item?.id}`)}
                         >
-                            <p className="mb-2 p-0"> 
+                            <p className="mb-2 p-0">
                                 {item?.content}
                             </p>
-                            <img src={item?.image} alt="" />
+                            {item?.image && (
+                                item.image.endsWith('.mp4') ? (
+                                    <video controls className="w-full rounded-lg mt-2">
+                                        <source src={item.image} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                ) : (
+                                    <img src={item.image} alt="" className="w-full rounded-lg mt-2" />
+                                )
+                            )}
                         </div>
                         <div className='py-5 flex flex-warp justify-between items-center'>
                             <div className='space-x-3 flex items-center text-gray-600'>
@@ -126,21 +135,21 @@ const TweetCard = ({item}) => {
                                 </p>
                             </div>
 
-                            <div className={`${item?.retwit  ? "text-pink-600" : "text-gray-600"} space-x-3 flex items-center`}>
+                            <div className={`${item?.retwit ? "text-pink-600" : "text-gray-600"} space-x-3 flex items-center`}>
                                 <RepeatIcon onClick={handleCreateRetweet}
                                     className='cursor-pointer'></RepeatIcon>
                                 <p>
                                     {item?.totalRetweets}
                                 </p>
 
-                            </div> 
+                            </div>
 
                             <div className={`${item?.liked ? "text-pink-600" : "text-gray-600"} space-x-3 flex items-center`}>
                                 {item?.liked ?
-                                    < FavoriteOutlined  onClick={handleLiketweet}
+                                    < FavoriteOutlined onClick={handleLiketweet}
                                         className='cursor-pointer' /> :
 
-                                    <FavoriteIcon  onClick={handleLiketweet}
+                                    <FavoriteIcon onClick={handleLiketweet}
                                         className='cursor-pointer' />}
                                 <p>
                                     {item?.totalLikes}

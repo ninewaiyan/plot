@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
+import SchoolIcon from '@mui/icons-material/School';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Avatar, Box, Button, Tab } from '@mui/material';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
@@ -20,7 +22,7 @@ const Profile = () => {
     const handleOpenProfileModal = () => setOpenProfileModal(true);
     const handleClose = () => setOpenProfileModal(false)
     const handleBack = () => navigate(-1)
-    const { auth,twit } = useSelector(store => store);
+    const { auth, twit } = useSelector(store => store);
     const dispatch = useDispatch();
     const { id } = useParams()
 
@@ -84,7 +86,7 @@ const Profile = () => {
                             onClick={handleFollowUser}
                             variant='contained' sx={{ borderRadius: "20px" }}
                         >
-                            {auth.findUser?.followed? "unfollow" : "follow"}
+                            {auth.findUser?.followed ? "unfollow" : "follow"}
                         </Button>
                     )}
 
@@ -104,23 +106,35 @@ const Profile = () => {
                 <div className='mt-2 space-y-3'>
                     <p>{auth.findUser?.bio}</p>
 
-                    <div className='py-1 flex space-x-5'>
-                        <div className="flex items-center text-gray-500">
-                            <BusinessCenterIcon></BusinessCenterIcon>
-                            <p className="ml-2">Education</p>
+                    <div className="py-1 flex flex-wrap gap-x-5 gap-y-2">
+                        <div className="flex-shrink-0 flex items-center text-gray-500">
+                            <SchoolIcon />
+                            <p className="ml-2">Education </p>
                         </div>
 
-                        <div className="flex items-center text-gray-500">
-                            <LocationOnIcon></LocationOnIcon>
+                        <div className="flex-shrink-0 flex items-center text-gray-500">
+                            <BusinessCenterIcon />
+                            <p className="ml-2">Work </p>
+                        </div>
+
+                        <div className="flex-shrink-0 flex items-center text-gray-500">
+                            <ContactPhoneIcon/>
+                            <p className="ml-2">09987876566</p>
+                        </div>
+
+                        <div className="flex-shrink-0 flex items-center text-gray-500">
+                            <LocationOnIcon />
                             <p className="ml-2">{auth.findUser?.location}</p>
                         </div>
 
-                        <div className="flex items-center text-gray-500">
-                            <CalendarMonthIcon></CalendarMonthIcon>
+                        <div className="flex-shrink-0 flex items-center text-gray-500">
+                            <CalendarMonthIcon />
                             <p className="ml-2">Joined Jun 2022</p>
                         </div>
 
+                        
                     </div>
+
 
                     <div className="flex items-center space-x-5">
 
@@ -144,18 +158,30 @@ const Profile = () => {
                             <TabList onChange={handleTabChange} aria-label="lab API tabs example">
                                 <Tab label="Tweets" value="1" />
                                 <Tab label="Replies" value="2" />
-                                <Tab label="Media" value="3" />
-                                <Tab label="Likes" value="4" />
+                                <Tab label="Photos" value="3" />
+                                <Tab label="Videos" value="4" />
                             </TabList>
                         </Box>
                         <TabPanel value="1">
-                            {twit.twits.map((item)=>(
-                                <TweetCard item={item}/>
+                            {twit.twits.map((item) => (
+                                <TweetCard item={item} />
                             ))}
                         </TabPanel>
                         <TabPanel value="2">Users Replies</TabPanel>
-                        <TabPanel value="3">Media</TabPanel>
-                        <TabPanel value="4">Likes</TabPanel>
+                        <TabPanel value="3">
+                            {twit.twits
+                                .filter(item => item.image && !item.image.match(/\.(mp4|webm|ogg)$/i))
+                                .map(item => (
+                                    <TweetCard key={item.id} item={item} />
+                                ))}
+                        </TabPanel>
+                        <TabPanel value="4">
+                            {twit.twits
+                                .filter(item => item.image && item.image.match(/\.(mp4|webm|ogg)$/i))
+                                .map(item => (
+                                    <TweetCard key={item.id} item={item} />
+                                ))}
+                        </TabPanel>
 
                     </TabContext>
                 </Box>

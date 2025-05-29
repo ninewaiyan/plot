@@ -44,20 +44,20 @@ const Navigation = () => {
 
                 </div>
 
-                <div className='py-5'>
+                {/* <div className='py-5'>
                     <Button
                         sx={{ width: "80%", borderRadius: "29px", py: "15px", bgcolor: "#1d9bf0" }}
                         variant="contained"
                     >
                         Tweet
                     </Button>
-                </div>
+                </div> */}
 
-                <div className='flex items-center justify-between'>
+                <div className='py-5 flex items-center justify-between'>
                     <div className='flex items-center space-x-3'>
                         <Avatar
                             alt="username"
-                            src='https://cdn.pixabay.com/photo/2023/05/02/10/35/avatar-7964945_1280.png'
+                            src={auth.user.image}
                         />
                         <div>
                             <p>{auth.user?.fullName}</p>
