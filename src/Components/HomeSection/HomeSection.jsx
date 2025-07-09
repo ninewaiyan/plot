@@ -11,7 +11,7 @@ import { createTweet, getAllTweets } from '../../Store/Twit/Action';
 import { uploadToCloudinary } from '../../Utils/uploadToCloudnary';
 
 const validationSchema = Yup.object().shape({
-  content: Yup.string().required('Tweet text is required'),
+  content: Yup.string().required('Plot text is required'),
   image: Yup.string().required('Please upload an image or video')
 });
 
@@ -171,4 +171,4 @@ const HomeSection = () => {
   );
 };
 
-export default HomeSection;
+export default HomeSection; 

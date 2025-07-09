@@ -44,7 +44,7 @@ const HomePage = () => {
         sx={{ display: 'block', width: '20%' }}
         item
         xs={12} 
-        lg={4}  // Each column takes up 4 grid spaces for 3 equal columns
+        lg={2}  // Each column takes up 4 grid spaces for 3 equal columns
       >
         
          <Navigation></Navigation> 
@@ -53,8 +53,8 @@ const HomePage = () => {
 
       {/* Middle Column */}
       <Grid 
-          className="px-5 lg:px-5"
-        sx={{ display: 'block', width: '40%' }}
+          className="px-1 lg:px-2"
+        sx={{ display: 'block', width: '50%' }}
         item
         xs={12} 
         lg={4}  // Each column takes up 4 grid spaces for 3 equal columns

@@ -16,25 +16,36 @@ export const navigationMenu=[
         path:"/home"
     },
 
-    {
-        title:"Explore",
-        icon:<ExporeIcon/>,
-        path:"/explore"
-    },
+    // {
+    //     title:"Explore",
+    //     icon:<ExporeIcon/>,
+    //     path:"/explore"
+    // },
     {
         title:"Notifications",
         icon:<NotificationIcon/>,
         path:"/notification"
     },
-    {
-        title:"Messages",
-        icon:<MessageIcon/>,
-        path:"/messages"
-    },
+    // {
+    //     title:"Messages",
+    //     icon:<MessageIcon/>,
+    //     path:"/messages"
+    // },
     {
         title:"Lists",
         icon:<ListAltIcon/>,
         path:"/list"
+    },
+
+    {
+        title:"Follower",
+         icon:<GroupIcon/>,
+        path:"/follower"
+    },
+    {
+        title:"Following",
+         icon:<GroupIcon/>,
+        path:"/following"
     },
 
     {
@@ -43,22 +54,22 @@ export const navigationMenu=[
         path:"/communities"
     },
 
-    {
-        title:"Verified",
-        icon:<VerifiedIcon/>,
-        path:"/verified"
-    },
+    // {
+    //     title:"Verified",
+    //     icon:<VerifiedIcon/>,
+    //     path:"/verified"
+    // },
 
-    {
-        title:"Profile",
-        icon:<AccountCircleIcon/>,
-        path:"/verified"
-    },
+    // {
+    //     title:"Profile",
+    //     icon:<AccountCircleIcon/>,
+    //     path:"/verified"
+    // },
 
-    {
-        title:"More",
-        icon:<PendingIcon/>,
-        path:"/more"
-    }
+    // {
+    //     title:"More",
+    //     icon:<PendingIcon/>,
+    //     path:"/more"
+    // }
     
     ]
