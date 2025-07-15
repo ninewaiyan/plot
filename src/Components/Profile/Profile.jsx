@@ -2,21 +2,20 @@ import React, { useEffect, useState } from "react";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import SchoolIcon from "@mui/icons-material/School";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Avatar, Box, Button, Tab } from "@mui/material";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import TweetCard from "../HomeSection/TweetCard";
 import ProfileModal from "./ProfileModal";
 import { useDispatch, useSelector } from "react-redux";
 import { findUserById, followUserAction } from "../../Store/Auth/Action";
-import { getUsersTweet } from "../../Store/Twit/Action";
 import EmailIcon from "@mui/icons-material/Email";
 import { formatNumber } from "../../Utils/formatNumber"; // adjust path as needed
 import Wallet from "../Wallet/Wallet";
-
+import PlotCard from '../HomeSection/PlotCard';
+import { getUserPlots } from "../../Store/Plot/Action";
 const Profile = () => {
   const [tabValue, setTabValue] = useState("1");
   const navigate = useNavigate();
@@ -24,9 +23,10 @@ const Profile = () => {
   const handleOpenProfileModal = () => setOpenProfileModal(true);
   const handleClose = () => setOpenProfileModal(false);
   const handleBack = () => navigate(-1);
-  const { auth, twit } = useSelector((store) => store);
+  const { auth, plot } = useSelector((store) => store);
   const dispatch = useDispatch();
   const { id } = useParams();
+
 
   console.log(auth.findUser);
   const handleFollowUser = () => {
@@ -34,20 +34,30 @@ const Profile = () => {
     console.log("open profile model");
   };
 
-  const handleTabChange = (event, newValue) => {
+
+  const location = useLocation();
+ 
+    const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
 
-    if (newValue === 4) {
-      console.log("likes twit");
-    } else if (newValue == 1) {
-      console.log("user Twits");
+    // Optional: update URL hash when tab changes
+    if (newValue === "4") {
+      window.history.replaceState(null, "", "#wallet");
+    } else {
+      window.history.replaceState(null, "", " ");
     }
   };
-
   useEffect(() => {
     dispatch(findUserById(id));
-    dispatch(getUsersTweet(id));
-  }, [id]);
+    dispatch(getUserPlots(id));
+  }, [dispatch, plot.like, plot.collect,id]);
+
+  useEffect(() => {
+  // If URL has #wallet, open wallet tab
+  if (location.hash === "#wallet") {
+    setTabValue("4");
+  }
+}, [location]);
 
   return (
     <div>
@@ -211,52 +221,35 @@ const Profile = () => {
         </div>
       </section>
       <section className="py-5">
-        <Box sx={{ width: "100%", typography: "body1" }}>
-          <TabContext value={tabValue}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                onChange={handleTabChange}
-                aria-label="lab API tabs example"
-              >
-                <Tab label="Tweets" value="1" />
-                <Tab label="Replies" value="2" />
-                <Tab label="Photos" value="3" />
-                {auth.findUser?.reqUser ? (
-                  <Tab label="Wallet" value="4" />
-                ) : null}
-              </TabList>
-            </Box>
-            <TabPanel value="1">
-              {twit.twits.map((item) => (
-                <TweetCard item={item} />
-              ))}
-            </TabPanel>
-            <TabPanel value="2">Users Replies</TabPanel>
-            <TabPanel value="3">
-              {twit.twits
-                .filter(
-                  (item) =>
-                    item.image && !item.image.match(/\.(mp4|webm|ogg)$/i)
-                )
-                .map((item) => (
-                  <TweetCard key={item.id} item={item} />
-                ))}
-            </TabPanel>
-            {/* <TabPanel value="4">
-              {twit.twits
-                .filter(
-                  (item) => item.image && item.image.match(/\.(mp4|webm|ogg)$/i)
-                )
-                .map((item) => (
-                  <TweetCard key={item.id} item={item} />
-                ))}
-            </TabPanel> */}
-
-            <TabPanel value="4">
-              <Wallet></Wallet>
-            </TabPanel>
-          </TabContext>
+     <Box sx={{ width: "100%", typography: "body1" }}>
+      <TabContext value={tabValue}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <TabList onChange={handleTabChange} aria-label="profile tabs">
+            <Tab label="Plots" value="1" />
+            <Tab label="Replot" value="2" />
+            <Tab label="Photos" value="3" />
+            {auth.findUser?.reqUser && <Tab label="Wallet" value="4" />}
+          </TabList>
         </Box>
+
+        <TabPanel value="1">
+          {plot.plots.map((item) => (
+            <PlotCard key={item.id} item={item} />
+          ))}
+        </TabPanel>
+        <TabPanel value="2">Users Replies</TabPanel>
+        <TabPanel value="3">
+          {plot.plots
+            .filter((item) => item.image && !item.image.match(/\.(mp4|webm|ogg)$/i))
+            .map((item) => (
+              <PlotCard key={item.id} item={item} />
+            ))}
+        </TabPanel>
+        <TabPanel value="4">
+          <Wallet />
+        </TabPanel>
+      </TabContext>
+    </Box>
       </section>
       <section>
         <ProfileModal handleClose={handleClose} open={openProfileModal} />

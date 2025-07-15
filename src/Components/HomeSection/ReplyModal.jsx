@@ -47,6 +47,7 @@ export default function ReplyModal({ open, handleClose, item }) {
     },
   });
 
+  
   const handleSelectMedia = async (e) => {
     const file = e.currentTarget.files && e.currentTarget.files[0];
     formik.setFieldTouched('image', true);

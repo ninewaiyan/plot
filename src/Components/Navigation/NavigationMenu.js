@@ -7,6 +7,12 @@ import GroupIcon from '@mui/icons-material/Group';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PendingIcon from '@mui/icons-material/Pending';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import PublicIcon from '@mui/icons-material/Public';
+import Diversity1Icon from '@mui/icons-material/Diversity1';
+import Diversity2Icon from '@mui/icons-material/Diversity2';
+import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
+
 
 export const navigationMenu=[
 
@@ -31,27 +37,27 @@ export const navigationMenu=[
     //     icon:<MessageIcon/>,
     //     path:"/messages"
     // },
-    {
-        title:"Lists",
-        icon:<ListAltIcon/>,
-        path:"/list"
-    },
 
     {
-        title:"Follower",
-         icon:<GroupIcon/>,
+        title:"Followers",
+         icon:<Diversity2Icon/>,
         path:"/follower"
     },
     {
-        title:"Following",
-         icon:<GroupIcon/>,
+        title:"Followings",
+         icon:<Diversity1Icon/>,
         path:"/following"
     },
 
     {
-        title:"Communities",
-        icon:<GroupIcon/>,
+        title:"Public",
+        icon:<PublicIcon/>,
         path:"/communities"
+    },
+    {
+        title:"Wallet",
+        icon:<AssuredWorkloadIcon/>,
+        path:""
     },
 
     // {

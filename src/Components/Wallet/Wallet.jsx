@@ -9,8 +9,8 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 
 import BuyModal from './BuyModal'; // 👈 Make sure the path is correct
-import TransferModal from './TransferModel';
-import ExchangeModal from './ExchangeModel';
+import TransferModal from './TransferModal';
+import ExchangeModal from './ExchangeModal';
 import WalletTransactionHistory from './WalletTransactionHistory';
 
 const formatNumber = (num) => {

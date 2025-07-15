@@ -1,14 +1,18 @@
 import { Avatar } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const WalletTransactionHistory = ({ auth }) => {
   const [filter, setFilter] = useState("ALL");
 
   const currentUserId = auth?.findUser?.id;
   const transactions = auth?.findUser?.walletTransactions || [];
+    const navigate = useNavigate();
+
 
   // Define filters including pseudo "RECEIVE"
   const filteredTransactions = transactions.filter((tx) => {
+    if (tx.type === "LIKE") return false; // ❌ Skip LIKE type
     if (filter === "ALL") return true;
     if (filter === "RECEIVE") return tx.type !== "BUY" && tx.receiverWallet?.userSummaryDto?.id === currentUserId;
     return tx.type === filter;
@@ -17,34 +21,69 @@ const WalletTransactionHistory = ({ auth }) => {
   const formatTime = (timeString) =>
     new Date(timeString).toLocaleString();
 
+  // const getUserInfo = (tx) => {
+  //   const isSender = tx.senderWallet?.userSummaryDto?.id === currentUserId;
+  //   const isReceiver = tx.receiverWallet?.userSummaryDto?.id === currentUserId;
+
+  //   if (tx.type === "BUY" || tx.type === "EXCHANGE") {
+  //     return {
+  //       name: "Plot Pay System",
+  //       image: "/Logo.png",
+  //     };
+  //   } else if (tx.type === "TRANSFER") {
+  //     if (isSender) {
+  //       return {
+  //         name: tx.receiverWallet?.userSummaryDto?.fullName?.split(" ")[0] || "Receiver",
+  //         image: tx.receiverWallet?.userSummaryDto?.image || "https://via.placeholder.com/40",
+  //       };
+  //     } else if (isReceiver) {
+  //       return {
+  //         name: tx.senderWallet?.userSummaryDto?.fullName?.split(" ")[0] || "Sender",
+  //         image: tx.senderWallet?.userSummaryDto?.image || "https://via.placeholder.com/40",
+  //       };
+  //     }
+  //   }
+
+  //   return {
+  //     name: "Unknown",
+  //     image: "https://via.placeholder.com/40",
+  //   };
+  // };
+
   const getUserInfo = (tx) => {
-    const isSender = tx.senderWallet?.userSummaryDto?.id === currentUserId;
-    const isReceiver = tx.receiverWallet?.userSummaryDto?.id === currentUserId;
+  const isSender = tx.senderWallet?.userSummaryDto?.id === currentUserId;
+  const isReceiver = tx.receiverWallet?.userSummaryDto?.id === currentUserId;
 
-    if (tx.type === "BUY" || tx.type === "EXCHANGE") {
-      return {
-        name: "Plot Pay System",
-        image: "/Logo.png",
-      };
-    } else if (tx.type === "TRANSFER") {
-      if (isSender) {
-        return {
-          name: tx.receiverWallet?.userSummaryDto?.fullName?.split(" ")[0] || "Receiver",
-          image: tx.receiverWallet?.userSummaryDto?.image || "https://via.placeholder.com/40",
-        };
-      } else if (isReceiver) {
-        return {
-          name: tx.senderWallet?.userSummaryDto?.fullName?.split(" ")[0] || "Sender",
-          image: tx.senderWallet?.userSummaryDto?.image || "https://via.placeholder.com/40",
-        };
-      }
-    }
-
+  if (tx.type === "BUY" || tx.type === "EXCHANGE") {
     return {
-      name: "Unknown",
-      image: "https://via.placeholder.com/40",
+      id: "system",
+      name: "Plot Pay System",
+      image: "/Logo.png",
     };
+  } else if (tx.type === "TRANSFER") {
+    if (isSender) {
+      const receiver = tx.receiverWallet?.userSummaryDto;
+      return {
+        id: receiver?.id || "unknown",
+        name: receiver?.fullName?.split(" ")[0] || "Receiver",
+        image: receiver?.image || "https://via.placeholder.com/40",
+      };
+    } else if (isReceiver) {
+      const sender = tx.senderWallet?.userSummaryDto;
+      return {
+        id: sender?.id || "unknown",
+        name: sender?.fullName?.split(" ")[0] || "Sender",
+        image: sender?.image || "https://via.placeholder.com/40",
+      };
+    }
+  }
+
+  return {
+    id: "unknown",
+    name: "Unknown",
+    image: "https://via.placeholder.com/40",
   };
+};
 
   const getMessage = (tx) => {
     const mmkAmount = (tx.amount * 0.8).toFixed(0);
@@ -97,7 +136,7 @@ const WalletTransactionHistory = ({ auth }) => {
       {filteredTransactions.length > 0 ? (
         <div className="space-y-4 max-h-80 overflow-y-auto">
           {filteredTransactions.map((tx, index) => {
-            const { name, image } = getUserInfo(tx);
+            const { id, name, image } = getUserInfo(tx);
             return (
               <div
                 key={index}
@@ -108,6 +147,7 @@ const WalletTransactionHistory = ({ auth }) => {
                     src={image}
                     alt={name}
                     className="w-10 h-10 rounded-full bx-border-circle object-cover"
+                    // onClick={() => navigate(`/profile/${id}`)}
                   />
                   <div>
                     <p className="font-medium">{name} <small  className="text-xs text-gray-400 whitespace-nowrap">{formatTime(tx.transactionTime)}</small></p>
