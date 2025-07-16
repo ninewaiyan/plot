@@ -24,6 +24,9 @@ import {
   USER_LIKE_PLOT_SUCCESS,
   VIEW_PLOT_FAILURE,
   VIEW_PLOT_SUCCESS,
+  UPDATE_PLOT_SUCCESS,
+  UPDATE_PLOT_FAILURE,
+  UPDATE_PLOT_REQUEST,
 } from "./ActionType";
 const initialState = {
   loading: false,
@@ -40,6 +43,7 @@ export const plotReducer = (state = initialState, action) => {
     case USER_LIKE_PLOT_REQUEST:
     case LIKE_PLOT_REQUEST:
     case COLLECT_REQUEST:
+    case UPDATE_PLOT_REQUEST:
     case FIND_PLOT_BY_ID_REQUEST:
       return { ...state, loading: true, error: null };
 
@@ -48,6 +52,7 @@ export const plotReducer = (state = initialState, action) => {
     case USER_LIKE_PLOT_FAILURE:
     case LIKE_PLOT_FAILURE:
     case COLLECT_FAILURE:
+    case UPDATE_PLOT_FAILURE:
     case FIND_PLOT_BY_ID_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
@@ -126,6 +131,15 @@ export const plotReducer = (state = initialState, action) => {
         ...state,
         error: action.payload,
       };
+      
+  case UPDATE_PLOT_SUCCESS:
+  return {
+    ...state,
+    plots: state.plots.map((plot) =>
+      plot.id === action.payload.id ? action.payload : plot
+    ),
+  };
+
     default:
       return state;
   }

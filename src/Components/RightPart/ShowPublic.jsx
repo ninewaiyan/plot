@@ -12,7 +12,7 @@ import { api } from "../../config/api";
 import { useNavigate } from "react-router-dom";
 import { formatNumber } from "../../Utils/formatNumber";
 
-const RightPart = () => {
+const ShowPublic = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -152,4 +152,4 @@ const RightPart = () => {
   );
 };
 
-export default RightPart;
+export default ShowPublic;

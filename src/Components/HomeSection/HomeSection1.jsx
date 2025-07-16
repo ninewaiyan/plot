@@ -95,10 +95,12 @@ const HomeSection1 = () => {
   };
 
   return (
-    <div className="space-y-5 max-w-xl mx-auto px-4">
-      <h1 className="py-5 text-2xl font-bold text-gray-800">Home</h1>
+    <div className="space-y-5 max-w-xl mx-auto ">
+      <h1 className="py-2 text-2xl font-bold text-gray-800">Home</h1>
 
-      <section className="bg-white rounded-xl shadow-md p-5 relative">
+      <section className="bg-white rounded-xl  p-5 relative"
+       style={{ boxShadow: "0 0 8px 3px rgba(69, 172, 220, 0.2)" }}
+      >
         <div className="flex space-x-4">
           <Avatar alt="user" src={auth.user.image} />
 
@@ -136,7 +138,7 @@ const HomeSection1 = () => {
                     <TagFacesIcon className="text-blue-500" />
                   </button>
                   {showEmojiPicker && (
-                    <div className="absolute z-10 top-12 right-0">
+                    <div className="absolute z-10 top-12 right-30">
                       <Picker
                         data={data}
                         onEmojiSelect={handleEmojiSelect}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Avatar,
@@ -8,30 +8,18 @@ import {
   ListItem,
   Divider,
 } from "@mui/material";
-import { api } from "../../config/api";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { formatNumber } from "../../Utils/formatNumber";
 
-const RightPart = () => {
-  const [users, setUsers] = useState([]);
+const ShowFollowing = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const navigate = useNavigate();
+  const { auth } = useSelector((state) => state);
+  const following = auth.user?.following || [];
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const { data } = await api.get("/api/users");
-        setUsers(data);
-      } catch (error) {
-        console.error("Failed to fetch users:", error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
-  const sortedUsers = [...users].sort((a, b) => {
+  const sortedUsers = [...following].sort((a, b) => {
     if (b.followerCount !== a.followerCount) {
       return b.followerCount - a.followerCount;
     }
@@ -46,11 +34,10 @@ const RightPart = () => {
 
   return (
     <Box sx={{ p: 2, maxWidth: 600, mx: "auto" }}>
-      {/* Search input */}
       <Box sx={{ position: "relative", mb: 2 }}>
         <input
           type="text"
-          placeholder="Search users by name or email..."
+          placeholder="Search following users..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{
@@ -77,10 +64,9 @@ const RightPart = () => {
         </Box>
       </Box>
 
-      {/* User list or message */}
-      {users.length === 0 ? (
+      {following.length === 0 ? (
         <Typography variant="body2" color="text.secondary" align="center" mt={5}>
-          😔 No users available.
+          😅 You are not following anyone yet.
         </Typography>
       ) : filteredUsers.length === 0 ? (
         <Typography variant="body2" color="text.secondary" align="center" mt={5}>
@@ -131,7 +117,7 @@ const RightPart = () => {
                     color="text.secondary"
                     sx={{ mt: 0.3 }}
                   >
-                    {formatNumber(user.followerCount)} Followers{" "}
+                    {formatNumber(user.followerCount || 0)} Followers{" "}
                     <small>
                       Joined on{" "}
                       {new Date(user.created_at).toLocaleDateString("en-US", {
@@ -152,4 +138,4 @@ const RightPart = () => {
   );
 };
 
-export default RightPart;
+export default ShowFollowing;

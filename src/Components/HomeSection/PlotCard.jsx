@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import { Avatar, Button, Menu, MenuItem } from "@mui/material";
@@ -13,13 +12,24 @@ import { FavoriteOutlined, LibraryAdd } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import ReplotModal from "./ReplotModal";
 import TransferModal from "../Wallet/TransferModal";
-import { likePlot, collect, findPlotsById, findPlotsByLikeContainUser } from "./../../Store/Plot/Action";
+import {
+  likePlot,
+  collect,
+  findPlotsById,
+  findPlotsByLikeContainUser,
+  deletePlot,
+  updatePlot,
+} from "./../../Store/Plot/Action";
 import { formatTimeAgo } from "../../Utils/formatTimeAgo";
 import { formatNumber } from "../../Utils/formatNumber";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import VolunteerActivismTwoToneIcon from "@mui/icons-material/VolunteerActivismTwoTone";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
-
+import DeleteConfirmModal from "./DeleteConfirmModal";
+import EditPlotModal from "./EditPlotModal";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
+import EditSquareIcon from '@mui/icons-material/EditSquare';
 const PlotCard = ({ item }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -32,6 +42,7 @@ const PlotCard = ({ item }) => {
   const [openReplotModal, setOpenReplotModal] = useState(false);
   const [openTransferModal, setOpenTransferModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const [showFullText, setShowFullText] = useState(false);
 
@@ -47,12 +58,26 @@ const PlotCard = ({ item }) => {
   };
 
   const handleDeletePlot = () => {
-    console.log("delete plot");
-    handleClose();
+    setOpenDeleteModal(true); // open confirmation modal
+    console.log("Handle Delete");
   };
 
+  const confirmDeletePlot = () => {
+    dispatch(deletePlot(item.id)); // item.id is the plot ID
+    setOpenDeleteModal(false);
+    handleClose();
+    navigate("/");
+  };
+
+  const [openEditModal, setOpenEditModal] = useState(false);
+
   const handleEditPlot = () => {
-    console.log("Edit plot");
+    setOpenEditModal(true);
+  };
+
+  const handleUpdatePlot = (values) => {
+    dispatch(updatePlot(item.id, values));
+    setOpenEditModal(false);
     handleClose();
   };
 
@@ -85,7 +110,9 @@ const PlotCard = ({ item }) => {
 
   return (
     <React.Fragment>
-      <div className="flex mt-3">
+      <div className="flex mt-3 py-5 px-5 rounded-md"
+      style={{ boxShadow: "0 0 8px 3px rgba(76, 98, 108, 0.2)" }}
+      >
         <Avatar
           alt="username"
           onClick={() => navigate(`/profile/${item?.user?.id}`)}
@@ -99,7 +126,11 @@ const PlotCard = ({ item }) => {
               <span className="font-semibold">{item?.user?.fullName}</span>
               <img className="ml-2 w-5 h-5" src="/verfied_logo.png" alt="" />
               <span className="text-grey-600">
-                . <small>{formatTimeAgo(item?.createdAt)}</small>
+                <small>
+                  {item.updatedAt
+                    ? `updated. ${formatTimeAgo(item.updatedAt)}`
+                    : `created. ${formatTimeAgo(item.createdAt)}`}
+                </small>
               </span>
             </div>
             <div>
@@ -121,14 +152,31 @@ const PlotCard = ({ item }) => {
               >
                 {user?.email === item?.user?.email ? (
                   <>
-                    <MenuItem onClick={handleDeletePlot}>Delete</MenuItem>
-                    <MenuItem onClick={handleEditPlot}>Edit</MenuItem>
+                    <MenuItem onClick={handleEditPlot}>
+                    <EditSquareIcon color="success"></EditSquareIcon>Edit 
+                    </MenuItem>
+                    <MenuItem onClick={handleDeletePlot}>
+                      <DeleteForeverIcon color="error"></DeleteForeverIcon>Delete 
+                    </MenuItem>
                   </>
                 ) : (
                   <MenuItem onClick={() => handleTransfer(item.user.id)}>
                     Transfer
                   </MenuItem>
                 )}
+
+                <EditPlotModal
+                  open={openEditModal}
+                  onClose={() => setOpenEditModal(false)}
+                  plot={item}
+                  onSubmit={handleUpdatePlot}
+                />
+
+                <DeleteConfirmModal
+                  open={openDeleteModal}
+                  onClose={() => setOpenDeleteModal(false)}
+                  onConfirm={confirmDeletePlot}
+                />
               </Menu>
             </div>
           </div>
@@ -228,7 +276,7 @@ const PlotCard = ({ item }) => {
       <TransferModal
         open={openTransferModal}
         handleClose={() => setOpenTransferModal(false)}
-        initialUserId={selectedUserId || null} 
+        initialUserId={selectedUserId || null}
       />
     </React.Fragment>
   );

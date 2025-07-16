@@ -22,7 +22,9 @@ import{GET_ALL_PLOTS_SUCCESS,
     GET_USERS_PLOTS_SUCCESS,
     GET_USERS_PLOTS_FAILURE,
     GET_USER_PLOTS_SUCCESS,
-    GET_USER_PLOTS_FAILURE
+    GET_USER_PLOTS_FAILURE,
+    UPDATE_PLOT_SUCCESS,
+    UPDATE_PLOT_FAILURE
 
 } from "./ActionType"
 import { toast } from "react-toastify";
@@ -101,7 +103,6 @@ export const replot =(plotData)=>async(dispatch)=>{
          console.log("replot : ",data)
          dispatch({type:REPLOT_SUCCESS,payload:data})
          toast.success("Replot complete!");
-
     }catch(error){
         console.log("catch error - ",error)
         dispatch({type:REPLOT_FAILURE,payload:error.message})
@@ -109,32 +110,6 @@ export const replot =(plotData)=>async(dispatch)=>{
     }
 }
 
-// export const collect =(plotId)=>async(dispatch)=>{
-//     try{
-//          const {data} = await api.put(`/api/plots/${plotId}/collect`);
-//          console.log("Collect : ",data)
-//          dispatch({type:COLLECT_SUCCESS,payload:data})
-         
-
-//     }catch(error){
-//         console.log("catch error - ",error)
-//         dispatch({type:COLLECT_FAILURE,payload:error.message})
-//          toast.error(error.response?.data?.message)
-//     }
-// }
-
-// export const likePlot =(plotId)=>async(dispatch)=>{
-//     try{
-//          const {data} = await api.post(`/api/${plotId}/like`);
-//          console.log("like plot: ",data)
-//          dispatch({type:LIKE_PLOT_SUCCESS,payload:data})
-
-//     }catch(error){
-//         console.log("catch error - ",error)
-//         dispatch({type:LIKE_PLOT_FAILURE,payload:error.message})
-//          toast.error(error.response?.data?.message)
-//     }
-// }
 
 export const collect = (plotId, callback) => async (dispatch) => {
   try {
@@ -163,17 +138,19 @@ export const likePlot = (plotId, callback) => async (dispatch) => {
 };
 
 
-export const  deletePlot =(plotId)=>async(dispatch)=>{
-    try{
-         const {data} = await api.delete(`/api/plot/${plotId}`);
-         console.log("delete plot : ",data)
-         dispatch({type:PLOT_DELETE_SUCCESS,payload:plotId})
+export const deletePlot = (plotId) => async (dispatch) => {
+  try {
+    const { data } = await api.delete(`/api/plots/delete/${plotId}`);
+    console.log("delete plot:", data);
+    dispatch({ type: PLOT_DELETE_SUCCESS, payload: plotId });
+    toast.success("Your plot is deleted successfully !")
+  } catch (error) {
+    console.log("catch error -", error);
+    dispatch({ type: PLOT_DELETE_FAILURE, payload: error.message });
+    toast.error(error.response?.data?.message);
+  }
+};
 
-    }catch(error){
-        console.log("catch error - ",error)
-        dispatch({type:PLOT_DELETE_FAILURE,payload:error.message})
-    }
-}
 
 export const viewPlot = (plotId) => async (dispatch) => {
   try {
@@ -184,5 +161,17 @@ export const viewPlot = (plotId) => async (dispatch) => {
   } catch (error) {
     console.log("catch error - ", error);
     dispatch({ type: VIEW_PLOT_FAILURE, payload: error.message });
+  }
+};
+
+export const updatePlot = (plotId, updatedData) => async (dispatch) => {
+  try {
+    console.log("Plot_Id",plotId,"Update Data",updatedData )
+    const { data } = await api.put(`/api/plots/update/${plotId}`, updatedData);
+    dispatch({ type: UPDATE_PLOT_SUCCESS, payload: data });
+    toast.success("Plot updated successfully");
+  } catch (error) {
+    dispatch({ type: UPDATE_PLOT_FAILURE, payload: error.message });
+     toast.error(error.response?.data?.message);
   }
 };
