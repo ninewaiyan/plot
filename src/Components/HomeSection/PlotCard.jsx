@@ -161,7 +161,7 @@ const PlotCard = ({ item }) => {
                   </>
                 ) : (
                   <MenuItem onClick={() => handleTransfer(item.user.id)}>
-                    Transfer
+                  <CompareArrowsIcon color="primary"/>Transfer
                   </MenuItem>
                 )}
 

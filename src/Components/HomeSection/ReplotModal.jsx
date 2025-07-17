@@ -24,7 +24,8 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 600,
+  width: "90%",       // Responsive width for mobile
+  maxWidth: 600,      // Max width for desktop
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 24,
@@ -47,7 +48,7 @@ export default function ReplotModal({ open, handleClose, item }) {
   const formik = useFormik({
     initialValues: {
       content: "",
-      media: "", // renamed from image to media
+      media: "",
       plotId: item?.id || "",
     },
     validationSchema: Yup.object({
@@ -108,11 +109,14 @@ export default function ReplotModal({ open, handleClose, item }) {
           </IconButton>
         </Box>
 
-        <Box display="flex" gap={2}>
-          <Avatar src={item?.user?.image} />
+        <Box display="flex" flexDirection={{ xs: "column", sm: "row" }} gap={2}>
+          <Avatar src={item?.user?.image} sx={{ flexShrink: 0 }} />
           <Box flexGrow={1}>
             {/* Original plot preview */}
-            <Box className="bg-gray-100 text-sm p-3 rounded mb-3">
+            <Box
+              className="bg-gray-100 text-sm p-3 rounded mb-3"
+              sx={{ maxWidth: "100%", wordBreak: "break-word" }}
+            >
               {item?.content?.length > 100
                 ? item.content.slice(0, 100) + "..."
                 : item.content}
@@ -123,7 +127,12 @@ export default function ReplotModal({ open, handleClose, item }) {
                     <video
                       controls
                       className="mt-2 rounded"
-                      style={{ maxHeight: 200, width: "100%", borderRadius: 8 }}
+                      style={{
+                        maxHeight: 200,
+                        width: "100%",
+                        borderRadius: 8,
+                        objectFit: "cover",
+                      }}
                     >
                       <source src={item.media} type="video/mp4" />
                       Your browser does not support the video tag.
@@ -173,11 +182,15 @@ export default function ReplotModal({ open, handleClose, item }) {
                     size="small"
                     aria-label="Insert emoji"
                   >
-                    <EmojiEmotionsIcon color="primary"  />
+                    <EmojiEmotionsIcon color="primary" />
                   </IconButton>
 
                   <label>
-                    <IconButton component="span" size="small" aria-label="Attach media">
+                    <IconButton
+                      component="span"
+                      size="small"
+                      aria-label="Attach media"
+                    >
                       <ImageIcon color="primary" />
                     </IconButton>
                     <input

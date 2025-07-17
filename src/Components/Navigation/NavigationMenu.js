@@ -16,15 +16,16 @@ export const navigationMenu = [
     icon: <NotificationsIcon />,
     path: "/notifications",
   },
-  {
-    title: "Followers",
-    icon: <Diversity2Icon />,
-    path: "/followers",
-  },
+
   {
     title: "Followings",
     icon: <Diversity1Icon />,
     path: "/followings",
+  },
+    {
+    title: "Followers",
+    icon: <Diversity2Icon />,
+    path: "/followers",
   },
   {
     title: "Public",

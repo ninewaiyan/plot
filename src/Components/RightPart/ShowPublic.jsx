@@ -88,7 +88,7 @@ const ShowPublic = () => {
         </Typography>
       ) : (
         <List>
-          {filteredUsers.map((user) => (
+          {filteredUsers.map((user, index) => (
             <React.Fragment key={user.id}>
               <ListItem
                 alignItems="center"
@@ -97,20 +97,26 @@ const ShowPublic = () => {
                   py: 0.75,
                   borderRadius: 2,
                   transition: "0.3s",
-                  boxShadow: "0 1px 6px rgba(0, 123, 255, 0.15)",
+                  boxShadow:
+                    index === 0
+                      ? "0 4px 20px rgba(255, 215, 0, 0.6)" // Gold shadow top 1
+                      : "0 1px 6px rgba(0, 123, 255, 0.15)",
                   "&:hover": {
-                    boxShadow: "0 2px 12px rgba(0, 123, 255, 0.3)",
+                    boxShadow:
+                      index === 0
+                        ? "0 6px 25px rgba(255, 215, 0, 0.9)" // Stronger gold hover top 1
+                        : "0 2px 12px rgba(0, 123, 255, 0.3)",
                     bgcolor: "rgba(0, 123, 255, 0.05)",
                   },
                   mb: 0.5,
                   cursor: "pointer",
                 }}
+                onClick={() => navigate(`/profile/${user.id}`)}
               >
                 <Avatar
                   alt={user.fullName}
                   src={user.image}
                   sx={{ width: 36, height: 36, mr: 2 }}
-                  onClick={() => navigate(`/profile/${user.id}`)}
                 />
                 <Box>
                   <Typography variant="body2" fontWeight={600} noWrap>
@@ -126,11 +132,7 @@ const ShowPublic = () => {
                   >
                     {user.email}
                   </Typography>
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ mt: 0.3 }}
-                  >
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 0.3 }}>
                     {formatNumber(user.followerCount)} Followers{" "}
                     <small>
                       Joined on{" "}

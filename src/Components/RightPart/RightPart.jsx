@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import {
   Avatar,
   Box,
@@ -7,50 +6,64 @@ import {
   List,
   ListItem,
   Divider,
+  Chip,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { api } from "../../config/api";
 import { useNavigate } from "react-router-dom";
 import { formatNumber } from "../../Utils/formatNumber";
+import { formatTimeAgo } from "../../Utils/formatTimeAgo";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCrown } from "@fortawesome/free-solid-svg-icons";
+import StarsIcon from "@mui/icons-material/Stars";
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
 
 const RightPart = () => {
-  const [users, setUsers] = useState([]);
+  const [plots, setPlots] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchPlots = async () => {
       try {
-        const { data } = await api.get("/api/users");
-        setUsers(data);
+        const { data } = await api.get("/api/plots/");
+        setPlots(data);
       } catch (error) {
-        console.error("Failed to fetch users:", error);
+        console.error("Failed to fetch public plots:", error);
       }
     };
-
-    fetchUsers();
+    fetchPlots();
   }, []);
 
-  const sortedUsers = [...users].sort((a, b) => {
-    if (b.followerCount !== a.followerCount) {
-      return b.followerCount - a.followerCount;
-    }
-    return new Date(b.created_at) - new Date(a.created_at);
+  const sortedPlots = [...plots].sort((a, b) => {
+    const scoreA = a.totalLikes + a.totalReplot + a.totalCollects + a.views;
+    const scoreB = b.totalLikes + b.totalReplot + b.totalCollects + b.views;
+    if (scoreB !== scoreA) return scoreB - scoreA;
+    return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
-  const filteredUsers = sortedUsers.filter(
-    (user) =>
-      user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPlots = sortedPlots.filter(
+    (plot) =>
+      plot.user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      plot.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const renderTimeAgo = (plot) => {
+    if (!plot.updatedAt || plot.updatedAt === plot.createdAt) {
+      return `Created ${formatTimeAgo(plot.createdAt)}`;
+    }
+    return `Updated ${formatTimeAgo(plot.updatedAt)}`;
+  };
 
   return (
     <Box sx={{ p: 2, maxWidth: 600, mx: "auto" }}>
-      {/* Search input */}
+      {/* Search */}
       <Box sx={{ position: "relative", mb: 2 }}>
         <input
           type="text"
-          placeholder="Search users by name or email..."
+          placeholder="Search by user or content..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{
@@ -77,77 +90,139 @@ const RightPart = () => {
         </Box>
       </Box>
 
-      {/* User list or message */}
-      {users.length === 0 ? (
-        <Typography variant="body2" color="text.secondary" align="center" mt={5}>
-          😔 No users available.
-        </Typography>
-      ) : filteredUsers.length === 0 ? (
-        <Typography variant="body2" color="text.secondary" align="center" mt={5}>
-          🔍 No users found.
-        </Typography>
-      ) : (
-        <List>
-          {filteredUsers.map((user) => (
-            <React.Fragment key={user.id}>
+      {/* Plot List */}
+      <List>
+        {filteredPlots.map((plot, index) => {
+          const isTop1 = index === 0;
+          const isTop10 = index < 10;
+
+          return (
+            <React.Fragment key={plot.id}>
               <ListItem
-                alignItems="center"
+                alignItems="flex-start"
+                onClick={() => navigate(`/plot/${plot?.id}`)}
                 sx={{
                   px: 1,
-                  py: 0.75,
+                  py: 1,
                   borderRadius: 2,
-                  transition: "0.3s",
-                  boxShadow: "0 1px 6px rgba(0, 123, 255, 0.15)",
-                  "&:hover": {
-                    boxShadow: "0 2px 12px rgba(0, 123, 255, 0.3)",
-                    bgcolor: "rgba(0, 123, 255, 0.05)",
-                  },
+                  position: "relative",
                   mb: 0.5,
                   cursor: "pointer",
+                  transition: "0.3s",
+                  boxShadow: isTop1
+                    ? "0 4px 18px rgba(255, 215, 0, 0.5)" // permanent gold for top 1
+                    : "0 1px 6px rgba(0, 123, 255, 0.15)",
+                  border: isTop1
+                    ? "2px solid gold"
+                    : isTop10
+                    ? "1px solid gold"
+                    : "1px solid #eee",
+                  "&:hover": {
+                    boxShadow: isTop1
+                      ? "0 6px 25px rgba(255, 215, 0, 0.75)" // more glow for top 1
+                      : isTop10
+                      ? "0 4px 14px rgba(255, 215, 0, 0.4)" // gold shadow on hover for top 2–10
+                      : "0 2px 12px rgba(0, 123, 255, 0.3)", // default hover
+                    bgcolor: "rgba(0, 123, 255, 0.05)",
+                  },
                 }}
               >
-                <Avatar
-                  alt={user.fullName}
-                  src={user.image}
-                  sx={{ width: 36, height: 36, mr: 2 }}
-                  onClick={() => navigate(`/profile/${user.id}`)}
-                />
-                <Box>
-                  <Typography variant="body2" fontWeight={600} noWrap>
-                    {user.fullName?.length > 10
-                      ? user.fullName.slice(0, 10) + "..."
-                      : user.fullName}
+                {/* Top Right: Crown or Rank */}
+                {isTop1 ? (
+                  <FontAwesomeIcon
+                    icon={faCrown}
+                    style={{
+                      color: "gold",
+                      fontSize: 20,
+                      position: "absolute",
+                      top: 8,
+                      right: 8,
+                    }}
+                  />
+                ) : isTop10 ? (
+                  <Chip
+                    label={
+                      <>
+                        <StarIcon
+                          sx={{ fontSize: 16, mr: 0.5, color: "silver" }}
+                        />
+                        {index + 1}
+                      </>
+                    }
+                    size="small"
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      right: 8,
+                      bgcolor: "gold",
+                      color: "#000",
+                      fontWeight: "bold",
+                    }}
+                  />
+                ) : null}
+
+                {/* Plot Body */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "100%",
+                  }}
+                >
+                  {/* Avatar + Name + Time */}
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
+                    <Avatar
+                      alt={plot.user.fullName}
+                      src={plot.user.image}
+                      sx={{ width: 36, height: 36, mr: 1 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/profile/${plot.user.id}`);
+                      }}
+                    />
+                    <Typography variant="body2" fontWeight={600} noWrap>
+                      {plot.user.fullName.length > 10
+                        ? plot.user.fullName.slice(0, 10) + "..."
+                        : plot.user.fullName}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ ml: 1 }}
+                    >
+                      {renderTimeAgo(plot)}
+                    </Typography>
+                  </Box>
+
+                  {/* Plot content */}
+                  <Typography
+                    variant="body2"
+                    sx={{ mt: 0.5 }}
+                    color="text.primary"
+                  >
+                    {plot.content.length > 100
+                      ? plot.content.slice(0, 100) + "..."
+                      : plot.content}
                   </Typography>
+
+                  {/* Stats */}
                   <Typography
                     variant="caption"
                     color="text.secondary"
-                    noWrap
-                    sx={{ display: "block" }}
+                    sx={{ mt: 0.7, fontSize: "11px" }}
                   >
-                    {user.email}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ mt: 0.3 }}
-                  >
-                    {formatNumber(user.followerCount)} Followers{" "}
-                    <small>
-                      Joined on{" "}
-                      {new Date(user.created_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </small>
+                    {formatNumber(plot.totalLikes)} Likes •{" "}
+                    {formatNumber(plot.totalReplot)} Replots •{" "}
+                    {formatNumber(plot.totalCollects)} Collects •{" "}
+                    {formatNumber(plot.views)} Views
                   </Typography>
                 </Box>
               </ListItem>
               <Divider component="li" sx={{ my: 0.5 }} />
             </React.Fragment>
-          ))}
-        </List>
-      )}
+          );
+        })}
+      </List>
     </Box>
   );
 };
