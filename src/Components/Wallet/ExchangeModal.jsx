@@ -36,7 +36,7 @@ export default function ExchangeModal({ open, handleClose }) {
     },
   });
 
-  const mmkValue = ((formik.values.likeAmount || 0) * 0.8).toFixed(2);
+  const mmkValue = ((formik.values.likeAmount || 0) * 0.98).toFixed(2);
 
   if (!open) return null;
 
@@ -113,7 +113,7 @@ export default function ExchangeModal({ open, handleClose }) {
             <p className="mb-4 text-sm text-gray-600">
               You will receive{" "}
               <span className="font-bold text-blue-600">{mmkValue} MMK</span>{" "}
-              (10 Likes = 8 MMK)
+              (1 Like = 0.98 MMK)
             </p>
 
             <div className="flex justify-between mt-6">
