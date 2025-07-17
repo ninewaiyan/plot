@@ -43,12 +43,12 @@
 }
 
 .auth-container body::before {
-    background: linear-gradient(90deg, #07158d, #c9d6ff);
+    background: linear-gradient(90deg, #5071ae, #c9d6ff);
     opacity: 1;
 }
 
 .auth-container body::after {
-    background: linear-gradient(90deg, #8d0383, #5071ae);
+    background: linear-gradient(90deg, #c9d6ff, #5071ae);
     opacity: 0;
 }
 
@@ -67,7 +67,7 @@
     height: 550px;
     background: #fff;
     border-radius: 30px;
-    box-shadow: 0 0 30px rgb(4, 117, 165);
+    box-shadow: 0 0 30px rgb(0, 0, 0.2);
     margin: 20px;
     overflow: hidden;
 }
@@ -171,7 +171,7 @@
 .auth-container .btn {
     width: 100%;
     height: 40px;
-    background: #1c41ae;     
+    background: #293d7a;     
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     border: none;
@@ -216,7 +216,7 @@
     left: -250%;
     width: 300%;
     height: 100%;
-    background: #052fae;
+    background: #293d7a;
     border-radius: 150px;
     z-index: 2;
     transition: 1.8s ease-in-out;

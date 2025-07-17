@@ -1,122 +1,3 @@
-// import { Google } from "@mui/icons-material"
-// import { Button, Grid } from "@mui/material"
-// import { GoogleLogin } from "@react-oauth/google"
-// import AuthModal from "./AuthModal"
-// import { useState } from "react"
-
-// const Authenticaton =()=>{
-//    const [openAuthModal,setOpenAuthModal] = useState(false);
-//    const handleOpenAuthModal=()=>setOpenAuthModal(true);
-//    const handleCloseAuthModal=()=>setOpenAuthModal(false);
-//      return (
-//         <div>
-//          <Grid className='overflow-y-hidden' container>
-//             <Grid className='hidden lg:block' item lg={7}>
-
-//                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwMCnEtKldsDWc8BhD4Wd8asclP5GlE4Y5fg&s" className="w-full h-screen" alt=""/>
-
-//                <div className='absolute top-[26%] left-[19%]'>
-//                   <img width={300} height={300} src="https://img.freepik.com/free-vector/twitter-new-2023-x-logo-white-background-vector_1017-45422.jpg?ga=GA1.1.1119583858.1747712609&semt=ais_hybrid&w=740" alt="" />
-//                </div>
-
-//             </Grid>
-
-//             <Grid className="px-10" lg={5} xs={12}>
-//                   <h1 className=" mt-10 font-bold text-7xl">Happening Now</h1>
-//                   <h1 className="font-bold text-3xl py-16">Join Twitter Today</h1>
-
-//                   <div className="w-[60%]">
-//                      <div className="w-full">
-//                         <GoogleLogin with={330}/>
-//                         <p className="py-5 text-center">OR</p>
-
-//                         <Button fullWidth variant="contained" size="large" sx={{
-//                            borderRadius:"29px",
-//                            py:"7px",
-//                         }}
-//                         onClick={handleOpenAuthModal}
-//                         >Create Account</Button>
-
-//                         <p className="text-sm mt-2 ">By signing up, you agree to the Terms of Service and
-//                            Privacy Policy, including Cookie Use. 
-//                         </p>
-//                      </div>
-
-//                      <div className="mt-10">
-//                         <h1 className="font-bold text-xl mb-5">Alerady Have Account ?</h1>
-//                         <Button fullWidth variant="outlined" size="large" sx={{
-//                            borderRadius:"29px",
-//                            py:"7px",
-//                         }}
-//                         onClick={handleOpenAuthModal}
-//                         >Login</Button> 
-                        
-//                      </div>
-
-//                   </div>
-//             </Grid>
-
-//          </Grid>
-
-//          <AuthModal open={openAuthModal} handleClose={handleCloseAuthModal}/>   
-         
-//         </div>
-
-//      )
-// }
-// export default Authenticaton
-
-// import React, { useState, useEffect } from "react";
-// import "./authentication.css";
-// import SigninForm from "./SigninForm";
-// import SignupForm from "./SignupForm";
-
-// const Authentication = () => {
-//   const [isLogin, setIsLogin] = useState(true);
-
-//   useEffect(() => {
-//     document.body.style.background = isLogin
-//       ? "linear-gradient(90deg, #c9d6ff, #5071ae)"
-//       : "linear-gradient(90deg, #5071ae, #c9d6ff)";
-//     return () => {
-//       document.body.style.background = "";
-//     };
-//   }, [isLogin]);
-
-//   return (
-//     <div className={`container ${isLogin ? "" : "active"}`}>
-//       {isLogin ? <SigninForm /> : <SignupForm/>}
-
-//       <div className="toggle-box">
-//         <div className="logo-watermark login-logo">
-//           <img src="/Logo1.png" alt="logo1" />
-//         </div>
-//         <div className="logo-watermark register-logo">
-//           <img src="/Logo.png" alt="logo2" />
-//         </div>
-//         <div className="toggle-panel toggle-left">
-//           <h1>Hello! Welcome</h1>
-//           <p>Don't have an account?</p>
-//           <button className="btn register-btn" onClick={() => setIsLogin(false)}>
-//             Register
-//           </button>
-//         </div>
-//         <div className="toggle-panel toggle-right">
-//           <h1>Welcome Back!</h1>
-//           <p>Already have an account?</p>
-//           <button className="btn login-btn" onClick={() => setIsLogin(true)}>
-//             Login
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Authentication;
-
-
-// ✅ Updated Authentication.jsx
 import React, { useState, useEffect } from "react";
 import "./authentication.css";
 import SigninForm from "./SigninForm";
@@ -127,47 +8,107 @@ const Authentication = () => {
 
   useEffect(() => {
     document.body.style.background = isLogin
-      ? "linear-gradient(90deg, #c9d6ff, #5071ae)"
-      : "linear-gradient(90deg, #5071ae, #c9d6ff)";
+      ? "linear-gradient(90deg, #2e06e1ff, #35d4ecff)"
+      : "linear-gradient(90deg, #0725e6ff, #c9d6ff)";
     return () => {
       document.body.style.background = "";
     };
   }, [isLogin]);
 
   return (
-    <div className="auth-container">
-      <div className={`container ${isLogin ? "" : "active"}`}>
-        {isLogin ? <SigninForm /> : <SignupForm />}
+    <div className="flex min-h-screen items-center justify-center">
+      {/* Left Panel with lighter colors and upgraded content */}
+      <div className="hidden lg:flex flex-col justify-center items-start text-gray-100 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 w-1/2 h-full p-16 rounded-r-3xl shadow-xl space-y-10">
+        <h1 className="text-5xl font-extrabold leading-tight max-w-xl drop-shadow-md">
+          Plot.com
+        </h1>
 
-        <div className="toggle-box">
-          <div className="logo-watermark login-logo">
-            <img src="/Logo1.png" alt="logo1" />
-          </div>
-          <div className="logo-watermark register-logo">
-            <img src="/Logo.png" alt="logo2" />
-          </div>
-          <div className="toggle-panel toggle-left">
-            <h1>Hello! Welcome</h1>
-            <p>Don't have an account?</p>
-            <button
-              className="btn register-btn"
-              onClick={() => setIsLogin(false)}
-            >
-              Register
-            </button>
-          </div>
-          <div className="toggle-panel toggle-right">
-            <h1>Welcome Back!</h1>
-            <p>Already have an account?</p>
-            <button
-              className="btn login-btn"
-              onClick={() => setIsLogin(true)}
-            >
-              Login
-            </button>
-          </div>
+        <p className="text-lg max-w-lg opacity-90 leading-relaxed drop-shadow-sm">
+          Unlock your voice in a vibrant space where every thought matters.
+          Build meaningful connections through authentic expression. Cultivate
+          creativity that sparks conversations and inspires change. Here, your
+          ideas don’t just float—they gain momentum and meaning.
+        </p>
+
+        <div className="bg-white bg-opacity-15 rounded-lg p-8 max-w-md backdrop-blur-sm shadow-md">
+          <h2 className="text-3xl font-semibold mb-5 drop-shadow-sm">
+            Why Choose Plot?
+          </h2>
+          <ul className="list-disc list-inside space-y-3 text-md">
+            <li>
+              <strong>Freedom to Share:</strong> Voice your thoughts without
+              limits, anytime, anywhere.
+            </li>
+            <li>
+              <strong>Deep Engagement:</strong> Like, replot, and collect ideas
+              that resonate with you.
+            </li>
+            <li>
+              <strong>Earn Recognition:</strong> Your creativity earns real
+              value and community respect.
+            </li>
+            <li>
+              <strong>Grow Your Network:</strong> Follow, connect, and
+              collaborate with like-minded thinkers.
+            </li>
+            <li>
+              <strong>Privacy First:</strong> Secure platform designed with your
+              safety and trust in mind.
+            </li>
+          </ul>
         </div>
+
+        <p className="italic text-sm opacity-80 max-w-sm drop-shadow-sm">
+          Step into Plot today — where your ideas evolve into impact.
+        </p>
       </div>
+
+      {/* Right - Keep your existing auth-container as-is */}
+      <div className="w-full lg:w-1/2 flex justify-center">
+        <div className="auth-container">
+          <h1 className="text-5xl font-extrabold leading-tight max-w-xl drop-shadow-md text-neutral-100">
+            Plot Your Thought and Earn Your Worth
+          </h1>
+        
+          <div className={`container ${isLogin ? "" : "active"}`}>
+            {isLogin ? <SigninForm /> : <SignupForm />}
+
+            <div className="toggle-box">
+              <div className="logo-watermark login-logo">
+                <img src="/Logo1.png" alt="logo1" />
+              </div>
+              <div className="logo-watermark register-logo">
+                <img src="/Logo.png" alt="logo2" />
+              </div>
+              <div className="toggle-panel toggle-left">
+                <h1>Hello! Welcome</h1>
+                <p>Don't have an account?</p>
+                <button
+                  className="btn register-btn"
+                  onClick={() => setIsLogin(false)}
+                >
+                  Register
+                </button>
+              </div>
+              <div className="toggle-panel toggle-right">
+                <h1>Welcome Back!</h1>
+                <p>Already have an account?</p>
+                <button
+                  className="btn login-btn"
+                  onClick={() => setIsLogin(true)}
+                >
+                  Login
+                </button>
+              </div>
+            </div>
+          </div>
+            <p className="text-2xl mt-4 text-neutral-200 italic drop-shadow-sm">
+            Your creativity is currency. Your voice, your value.
+          </p>
+        </div>
+        
+      </div>
+      
     </div>
   );
 };

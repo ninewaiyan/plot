@@ -75,7 +75,6 @@ const SigninForm = () => {
           <div className="social-icons">
             <a href="#"><i className="bx bxl-github"></i></a>
             <a href="#"><i className="bx bxl-google"></i></a>
-            <a href="#"><i className="bx bxl-facebook-square"></i></a>
             <a href="#"><i className="bx bxl-linkedin"></i></a>
           </div>
         </form>
