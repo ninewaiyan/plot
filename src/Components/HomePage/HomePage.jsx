@@ -9,13 +9,13 @@ import Navigation from "../Navigation/Navigation";
 import RightPart from "../RightPart/RightPart";
 import Profile from "../Profile/Profile";
 import PlotDetails from "../PlotDetails/PlotDetails";
-import HomeSection1 from "../HomeSection/HomeSection1";
+import HomeSection1 from "../HomeSection/HomeSection";
 import Wallet from "../Wallet/Wallet";
 import ShowNotification from "../RightPart/ShowNotification";
-import { Public } from "@mui/icons-material";
 import ShowPublic from "../RightPart/ShowPublic";
 import ShowFollower from "../RightPart/ShowFollower";
 import ShowFollowing from "../RightPart/ShowFollowing";
+import ShowFriend from "../RightPart/ShowFriend";
 
 const DraggableButton = ({ side = "left", icon, onClick, visible }) => {
   const theme = useTheme();
@@ -104,6 +104,7 @@ const HomePage = () => {
       "/followers",
       "/followings",
       "/public",
+      "/friends"
     ];
     setOpenRight(rightRoutes.includes(location.pathname));
     setOpenLeft(false);
@@ -114,7 +115,7 @@ const HomePage = () => {
   location.pathname === "/home" ||
   matchPath("/profile/:id", location.pathname) ||
   matchPath("/plot/:id", location.pathname) ||
-  ["/notifications", "/followers", "/followings", "/public"].includes(location.pathname)
+  ["/notifications", "/followers", "/followings", "/public","/friends"].includes(location.pathname)
 
   return (
     <>
@@ -140,6 +141,7 @@ const HomePage = () => {
           <Routes>
             <Route path="/notifications" element={<ShowNotification/>} />
             <Route path="/followers" element={<ShowFollower/>} />
+             <Route path="/friends" element={<ShowFriend/>} />
             <Route path="/home" element={<RightPart/>} />
             <Route path="/" element={<RightPart/>} />
             <Route path="/followings" element={<ShowFollowing/>} />
@@ -209,6 +211,7 @@ const HomePage = () => {
             <Route path="/followers" element={<HomeSection1 />} />
             <Route path="/followings" element={<HomeSection1 />} />
             <Route path="/public" element={<HomeSection1 />} />
+            <Route path="/friends" element={<HomeSection1 />} />
           </Routes>
         </Box>
 
@@ -237,6 +240,7 @@ const HomePage = () => {
             <Route path="/followers" element={<ShowFollower/>} />
             <Route path="/followings" element={<ShowFollowing/>} />
             <Route path="/public" element={<ShowPublic/>} />
+            <Route path="/friends" element={<ShowFriend/>} />
           </Routes>
             
            

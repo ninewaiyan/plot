@@ -1,54 +1,75 @@
-import React, { useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
+import React, { useEffect, useState } from 'react';
 import {
-  Avatar,
   Box,
+  Avatar,
   Typography,
+  CircularProgress,
+  TextField,
   List,
   ListItem,
   Divider,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { formatNumber } from "../../Utils/formatNumber";
-import Diversity2Icon from "@mui/icons-material/Diversity2";
+} from '@mui/material';
+import { api } from '../../config/api';
+import { useNavigate } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
 
+// Optional: helper for formatting large numbers
+const formatNumber = (num) => {
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+  if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+  return num;
+};
 
-const ShowFollower = () => {
+const ShowFriend = ({
+  title = 'Friends',
+  endpoint = '/api/users/friends',
+}) => {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
 
-  const { auth } = useSelector((state) => state);
-  const followers = auth.user?.followers || [];
+  const fetchUsers = async () => {
+    try {
+      const response = await api.get(endpoint);
+      const res = response.data;
+      const dataArray = Array.isArray(res)
+        ? res
+        : res.friends || res.followers || res.following || [];
 
-  const sortedUsers = [...followers].sort((a, b) => {
-    if (b.followerCount !== a.followerCount) {
-      return b.followerCount - a.followerCount;
+      setUsers(dataArray);
+    } catch (error) {
+      console.error(`Failed to fetch ${title.toLowerCase()}:`, error);
+      setUsers([]);
+    } finally {
+      setLoading(false);
     }
-    return new Date(b.created_at) - new Date(a.created_at);
-  });
+  };
 
-  const filteredUsers = sortedUsers.filter(
-    (user) =>
-      user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    fetchUsers();
+  }, [endpoint]);
+
+  const filteredUsers = users.filter((user) =>
+    user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <Box sx={{ p: 2, maxWidth: 600, mx: "auto" }}>
-      <Typography
-        variant="h5"
-        fontWeight="bold"
-        mb={3}
-        textAlign="left"
-        color="primary"
-      >
-     Followers
-      </Typography>
+        <Typography
+                variant="h5"
+                fontWeight="bold"
+                mb={3}
+                textAlign="left"
+                color="primary"
+              >
+                Friends
+              </Typography>
       <Box sx={{ position: "relative", mb: 2 }}>
         <input
           type="text"
-          placeholder="Search followers..."
+          placeholder={`Search ${title.toLowerCase()}...`}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{
@@ -75,23 +96,17 @@ const ShowFollower = () => {
         </Box>
       </Box>
 
-      {followers.length === 0 ? (
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          align="center"
-          mt={5}
-        >
-          🥲 No one follows you yet.
+      {loading ? (
+        <Box display="flex" justifyContent="center" py={3}>
+          <CircularProgress size={24} />
+        </Box>
+      ) : users.length === 0 ? (
+        <Typography variant="body2" color="text.secondary" align="center" mt={5}>
+          😅 No {title.toLowerCase()} yet.
         </Typography>
       ) : filteredUsers.length === 0 ? (
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          align="center"
-          mt={5}
-        >
-          🔍 No followers found.
+        <Typography variant="body2" color="text.secondary" align="center" mt={5}>
+          🔍 No users found.
         </Typography>
       ) : (
         <List>
@@ -112,12 +127,12 @@ const ShowFollower = () => {
                   mb: 0.5,
                   cursor: "pointer",
                 }}
+                onClick={() => navigate(`/profile/${user.id}`)}
               >
                 <Avatar
                   alt={user.fullName}
                   src={user.image}
                   sx={{ width: 36, height: 36, mr: 2 }}
-                  onClick={() => navigate(`/profile/${user.id}`)}
                 />
                 <Box>
                   <Typography variant="body2" fontWeight={600} noWrap>
@@ -136,11 +151,10 @@ const ShowFollower = () => {
                   <Typography
                     variant="caption"
                     color="text.secondary"
-                    sx={{ mt: 0.3 }}
                   >
-                    {formatNumber(user.followerCount || 0)} Followers{" "}
+                    {formatNumber(user.followerCount || 0)} Followers •{" "}
                     <small>
-                      Joined on{" "}
+                      Joined{" "}
                       {new Date(user.created_at).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -159,4 +173,4 @@ const ShowFollower = () => {
   );
 };
 
-export default ShowFollower;
+export default ShowFriend;

@@ -36,6 +36,7 @@ export const loginUser = (loginData) => async (dispatch) => {
     }
 
     dispatch({ type: LOGIN_USER_SUCCESS, payload: data.jwt });
+     window.location.reload();
   } catch (error) {
     console.log("error", error);
     toast.error(error.response?.data?.message || "Login Failed");
@@ -66,6 +67,7 @@ export const registerUser = (registerData) => async (dispatch) => {
     }
 
     dispatch({ type: REGISTER_USER_SUCCESS, payload: data.jwt });
+     window.location.reload();   
   } catch (error) {
     console.log("error", error);
     toast.error(error.response?.data?.message || "Registration Failed");

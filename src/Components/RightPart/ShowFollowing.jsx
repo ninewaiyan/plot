@@ -34,6 +34,15 @@ const ShowFollowing = () => {
 
   return (
     <Box sx={{ p: 2, maxWidth: 600, mx: "auto" }}>
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        mb={3}
+        textAlign="left"
+        color="primary"
+      >
+      Followings
+      </Typography>
       <Box sx={{ position: "relative", mb: 2 }}>
         <input
           type="text"
@@ -65,11 +74,21 @@ const ShowFollowing = () => {
       </Box>
 
       {following.length === 0 ? (
-        <Typography variant="body2" color="text.secondary" align="center" mt={5}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          align="center"
+          mt={5}
+        >
           😅 You are not following anyone yet.
         </Typography>
       ) : filteredUsers.length === 0 ? (
-        <Typography variant="body2" color="text.secondary" align="center" mt={5}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          align="center"
+          mt={5}
+        >
           🔍 No users found.
         </Typography>
       ) : (

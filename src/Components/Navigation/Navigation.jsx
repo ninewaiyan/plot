@@ -50,10 +50,16 @@ const Navigation = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+
+        overflowY: "auto",          // allow vertical scroll
+        scrollbarWidth: "none",     // Firefox scrollbar hidden
+        "&::-webkit-scrollbar": {   // Chrome, Safari scrollbar hidden
+          display: "none",
+        },
       }}
     >
       {/* Logo */}
-      <Box sx={{ py: 2, textAlign: "center" }}>
+      <Box sx={{ py: 1, textAlign: "center" }}>
         <img src="/Logo.png" alt="Logo" width={80} height={80} />
       </Box>
 

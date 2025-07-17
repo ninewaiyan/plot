@@ -46,6 +46,15 @@ const ShowPublic = () => {
 
   return (
     <Box sx={{ p: 2, maxWidth: 600, mx: "auto" }}>
+      <Typography
+              variant="h5"
+              fontWeight="bold"
+              mb={3}
+              textAlign="left"
+              color="primary"
+            >
+            Public
+            </Typography>
       {/* Search input */}
       <Box sx={{ position: "relative", mb: 2 }}>
         <input

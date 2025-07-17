@@ -4,6 +4,7 @@ import Diversity2Icon from "@mui/icons-material/Diversity2";
 import Diversity1Icon from "@mui/icons-material/Diversity1";
 import PublicIcon from "@mui/icons-material/Public";
 import AssuredWorkloadIcon from "@mui/icons-material/AssuredWorkload";
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 
 export const navigationMenu = [
   {
@@ -27,6 +28,13 @@ export const navigationMenu = [
     icon: <Diversity2Icon />,
     path: "/followers",
   },
+
+  {
+    title: "Friends",
+    icon: <Diversity3Icon />,
+    path: "/friends",
+  },
+  
   {
     title: "Public",
     icon: <PublicIcon />,

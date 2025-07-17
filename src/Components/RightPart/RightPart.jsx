@@ -90,139 +90,142 @@ const RightPart = () => {
         </Box>
       </Box>
 
-      {/* Plot List */}
-      <List>
-        {filteredPlots.map((plot, index) => {
-          const isTop1 = index === 0;
-          const isTop10 = index < 10;
+    
 
-          return (
-            <React.Fragment key={plot.id}>
-              <ListItem
-                alignItems="flex-start"
-                onClick={() => navigate(`/plot/${plot?.id}`)}
-                sx={{
-                  px: 1,
-                  py: 1,
-                  borderRadius: 2,
-                  position: "relative",
-                  mb: 0.5,
-                  cursor: "pointer",
-                  transition: "0.3s",
-                  boxShadow: isTop1
-                    ? "0 4px 18px rgba(255, 215, 0, 0.5)" // permanent gold for top 1
-                    : "0 1px 6px rgba(0, 123, 255, 0.15)",
-                  border: isTop1
-                    ? "2px solid gold"
-                    : isTop10
-                    ? "1px solid gold"
-                    : "1px solid #eee",
-                  "&:hover": {
-                    boxShadow: isTop1
-                      ? "0 6px 25px rgba(255, 215, 0, 0.75)" // more glow for top 1
-                      : isTop10
-                      ? "0 4px 14px rgba(255, 215, 0, 0.4)" // gold shadow on hover for top 2–10
-                      : "0 2px 12px rgba(0, 123, 255, 0.3)", // default hover
-                    bgcolor: "rgba(0, 123, 255, 0.05)",
-                  },
+      {filteredPlots.length > 0 ? (
+  <List>
+    {filteredPlots.map((plot, index) => {
+      const isTop1 = index === 0;
+      const isTop10 = index < 10;
+
+      return (
+        <React.Fragment key={plot.id}>
+          <ListItem
+            alignItems="flex-start"
+            onClick={() => navigate(`/plot/${plot?.id}`)}
+            sx={{
+              px: 1,
+              py: 1,
+              borderRadius: 2,
+              position: "relative",
+              mb: 0.5,
+              cursor: "pointer",
+              transition: "0.3s",
+              boxShadow: isTop1
+                ? "0 4px 18px rgba(255, 215, 0, 0.5)"
+                : "0 1px 6px rgba(0, 123, 255, 0.15)",
+              border: isTop1
+                ? "2px solid gold"
+                : isTop10
+                ? "1px solid gold"
+                : "1px solid #eee",
+              "&:hover": {
+                boxShadow: isTop1
+                  ? "0 6px 25px rgba(255, 215, 0, 0.75)"
+                  : isTop10
+                  ? "0 4px 14px rgba(255, 215, 0, 0.4)"
+                  : "0 2px 12px rgba(0, 123, 255, 0.3)",
+                bgcolor: "rgba(0, 123, 255, 0.05)",
+              },
+            }}
+          >
+            {/* Crown / Rank */}
+            {isTop1 ? (
+              <FontAwesomeIcon
+                icon={faCrown}
+                style={{
+                  color: "gold",
+                  fontSize: 20,
+                  position: "absolute",
+                  top: 8,
+                  right: 8,
                 }}
-              >
-                {/* Top Right: Crown or Rank */}
-                {isTop1 ? (
-                  <FontAwesomeIcon
-                    icon={faCrown}
-                    style={{
-                      color: "gold",
-                      fontSize: 20,
-                      position: "absolute",
-                      top: 8,
-                      right: 8,
-                    }}
-                  />
-                ) : isTop10 ? (
-                  <Chip
-                    label={
-                      <>
-                        <StarIcon
-                          sx={{ fontSize: 16, mr: 0.5, color: "silver" }}
-                        />
-                        {index + 1}
-                      </>
-                    }
-                    size="small"
-                    sx={{
-                      position: "absolute",
-                      top: 8,
-                      right: 8,
-                      bgcolor: "gold",
-                      color: "#000",
-                      fontWeight: "bold",
-                    }}
-                  />
-                ) : null}
-
-                {/* Plot Body */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "100%",
-                  }}
-                >
-                  {/* Avatar + Name + Time */}
-                  <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
-                    <Avatar
-                      alt={plot.user.fullName}
-                      src={plot.user.image}
-                      sx={{ width: 36, height: 36, mr: 1 }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/profile/${plot.user.id}`);
-                      }}
+              />
+            ) : isTop10 ? (
+              <Chip
+                label={
+                  <>
+                    <StarIcon
+                      sx={{ fontSize: 16, mr: 0.5, color: "silver" }}
                     />
-                    <Typography variant="body2" fontWeight={600} noWrap>
-                      {plot.user.fullName.length > 10
-                        ? plot.user.fullName.slice(0, 10) + "..."
-                        : plot.user.fullName}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      color="text.secondary"
-                      sx={{ ml: 1 }}
-                    >
-                      {renderTimeAgo(plot)}
-                    </Typography>
-                  </Box>
+                    {index + 1}
+                  </>
+                }
+                size="small"
+                sx={{
+                  position: "absolute",
+                  top: 8,
+                  right: 8,
+                  bgcolor: "gold",
+                  color: "#000",
+                  fontWeight: "bold",
+                }}
+              />
+            ) : null}
 
-                  {/* Plot content */}
-                  <Typography
-                    variant="body2"
-                    sx={{ mt: 0.5 }}
-                    color="text.primary"
-                  >
-                    {plot.content.length > 100
-                      ? plot.content.slice(0, 100) + "..."
-                      : plot.content}
-                  </Typography>
+            {/* Plot Body */}
+            <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
+                <Avatar
+                  alt={plot.user.fullName}
+                  src={plot.user.image}
+                  sx={{ width: 36, height: 36, mr: 1 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/profile/${plot.user.id}`);
+                  }}
+                />
+                <Typography variant="body2" fontWeight={600} noWrap>
+                  {plot.user.fullName.length > 10
+                    ? plot.user.fullName.slice(0, 10) + "..."
+                    : plot.user.fullName}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ ml: 1 }}
+                >
+                  {renderTimeAgo(plot)}
+                </Typography>
+              </Box>
 
-                  {/* Stats */}
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ mt: 0.7, fontSize: "11px" }}
-                  >
-                    {formatNumber(plot.totalLikes)} Likes •{" "}
-                    {formatNumber(plot.totalReplot)} Replots •{" "}
-                    {formatNumber(plot.totalCollects)} Collects •{" "}
-                    {formatNumber(plot.views)} Views
-                  </Typography>
-                </Box>
-              </ListItem>
-              <Divider component="li" sx={{ my: 0.5 }} />
-            </React.Fragment>
-          );
-        })}
-      </List>
+              <Typography
+                variant="body2"
+                sx={{ mt: 0.5 }}
+                color="text.primary"
+              >
+                {plot.content.length > 100
+                  ? plot.content.slice(0, 100) + "..."
+                  : plot.content}
+              </Typography>
+
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ mt: 0.7, fontSize: "11px" }}
+              >
+                {formatNumber(plot.totalLikes)} Likes •{" "}
+                {formatNumber(plot.totalReplot)} Replots •{" "}
+                {formatNumber(plot.totalCollects)} Collects •{" "}
+                {formatNumber(plot.views)} Views
+              </Typography>
+            </Box>
+          </ListItem>
+          <Divider component="li" sx={{ my: 0.5 }} />
+        </React.Fragment>
+      );
+    })}
+  </List>
+) : (
+  <Typography
+    align="center"
+    color="text.secondary"
+    sx={{ mt: 4, fontStyle: "italic" }}
+  >
+    No plots found.
+  </Typography>
+)}
+
     </Box>
   );
 };

@@ -3,7 +3,7 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import SchoolIcon from "@mui/icons-material/School";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Avatar, Box, Button, Tab } from "@mui/material";
+import { Avatar, Box, Button, Tab, Typography } from "@mui/material";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -222,33 +222,51 @@ const Profile = () => {
       </section>
       <section className="py-5">
      <Box sx={{ width: "100%", typography: "body1" }}>
-      <TabContext value={tabValue}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList onChange={handleTabChange} aria-label="profile tabs">
-            <Tab label="Plots" value="1" />
-            <Tab label="Replot" value="2" />
-            <Tab label="Photos" value="3" />
-            {auth.findUser?.reqUser && <Tab label="Wallet" value="4" />}
-          </TabList>
-        </Box>
+   <TabContext value={tabValue}>
+  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <TabList onChange={handleTabChange} aria-label="profile tabs">
+      <Tab label="Plots" value="1" />
+      <Tab label="Videos" value="2" />
+      <Tab label="Photos" value="3" />
+      {auth.findUser?.reqUser && <Tab label="Wallet" value="4" />}
+    </TabList>
+  </Box>
 
-        <TabPanel value="1">
-          {plot.plots.map((item) => (
-            <PlotCard key={item.id} item={item} />
-          ))}
-        </TabPanel>
-        <TabPanel value="2">Users Replies</TabPanel>
-        <TabPanel value="3">
-          {plot.plots
-            .filter((item) => item.image && !item.image.match(/\.(mp4|webm|ogg)$/i))
-            .map((item) => (
-              <PlotCard key={item.id} item={item} />
-            ))}
-        </TabPanel>
-        <TabPanel value="4">
-          <Wallet />
-        </TabPanel>
-      </TabContext>
+  {/* Plots Tab */}
+  <TabPanel value="1">
+    {plot.plots.map((item) => (
+      <PlotCard key={item.id} item={item} />
+    ))}
+  </TabPanel>
+
+  {/* Videos Tab */}
+  <TabPanel value="2">
+    {plot.plots.filter((item) => item.media?.match(/\.(mp4|webm|ogg)$/i)).length > 0 ? (
+      plot.plots
+        .filter((item) => item.media?.match(/\.(mp4|webm|ogg)$/i))
+        .map((item) => <PlotCard key={item.id} item={item} />)
+    ) : (
+      <Typography>No videos found</Typography>
+    )}
+  </TabPanel>
+
+  {/* Photos Tab */}
+  <TabPanel value="3">
+    {plot.plots.filter((item) => item.media && !item.media.match(/\.(mp4|webm|ogg)$/i)).length > 0 ? (
+      plot.plots
+        .filter((item) => item.media && !item.media.match(/\.(mp4|webm|ogg)$/i))
+        .map((item) => <PlotCard key={item.id} item={item} />)
+    ) : (
+      <Typography>No photos found</Typography>
+    )}
+  </TabPanel>
+
+  {/* Wallet Tab */}
+  <TabPanel value="4">
+    <Wallet />
+  </TabPanel>
+</TabContext>
+
     </Box>
       </section>
       <section>
