@@ -257,7 +257,7 @@ const EditPlotModal = ({ open, onClose, plot, onSubmit }) => {
             disabled={uploading}
             startIcon={<ImageIcon />}
           >
-            Upload .jpg, .png, or .mp4
+            Upload 
             <input
               type="file"
               hidden

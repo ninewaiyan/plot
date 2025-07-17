@@ -9,16 +9,13 @@ import {
   Chip,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { api } from "../../config/api";
 import { useNavigate } from "react-router-dom";
 import { formatNumber } from "../../Utils/formatNumber";
 import { formatTimeAgo } from "../../Utils/formatTimeAgo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCrown } from "@fortawesome/free-solid-svg-icons";
-import StarsIcon from "@mui/icons-material/Stars";
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import StarIcon from '@mui/icons-material/Star';
+import StarIcon from "@mui/icons-material/Star";
 
 const RightPart = () => {
   const [plots, setPlots] = useState([]);
@@ -37,6 +34,7 @@ const RightPart = () => {
     fetchPlots();
   }, []);
 
+  // Sort globally once
   const sortedPlots = [...plots].sort((a, b) => {
     const scoreA = a.totalLikes + a.totalReplot + a.totalCollects + a.views;
     const scoreB = b.totalLikes + b.totalReplot + b.totalCollects + b.views;
@@ -44,6 +42,11 @@ const RightPart = () => {
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
+  // Get global top 10 and top 1 IDs
+  const top10PlotIds = sortedPlots.slice(0, 10).map((plot) => plot.id);
+  const top1PlotId = top10PlotIds[0];
+
+  // Filtered based on search
   const filteredPlots = sortedPlots.filter(
     (plot) =>
       plot.user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -90,142 +93,138 @@ const RightPart = () => {
         </Box>
       </Box>
 
-    
-
+      {/* Plot list */}
       {filteredPlots.length > 0 ? (
-  <List>
-    {filteredPlots.map((plot, index) => {
-      const isTop1 = index === 0;
-      const isTop10 = index < 10;
+        <List>
+          {filteredPlots.map((plot) => {
+            const isTop1 = plot.id === top1PlotId;
+            const isTop10 = top10PlotIds.includes(plot.id);
 
-      return (
-        <React.Fragment key={plot.id}>
-          <ListItem
-            alignItems="flex-start"
-            onClick={() => navigate(`/plot/${plot?.id}`)}
-            sx={{
-              px: 1,
-              py: 1,
-              borderRadius: 2,
-              position: "relative",
-              mb: 0.5,
-              cursor: "pointer",
-              transition: "0.3s",
-              boxShadow: isTop1
-                ? "0 4px 18px rgba(255, 215, 0, 0.5)"
-                : "0 1px 6px rgba(0, 123, 255, 0.15)",
-              border: isTop1
-                ? "2px solid gold"
-                : isTop10
-                ? "1px solid gold"
-                : "1px solid #eee",
-              "&:hover": {
-                boxShadow: isTop1
-                  ? "0 6px 25px rgba(255, 215, 0, 0.75)"
-                  : isTop10
-                  ? "0 4px 14px rgba(255, 215, 0, 0.4)"
-                  : "0 2px 12px rgba(0, 123, 255, 0.3)",
-                bgcolor: "rgba(0, 123, 255, 0.05)",
-              },
-            }}
-          >
-            {/* Crown / Rank */}
-            {isTop1 ? (
-              <FontAwesomeIcon
-                icon={faCrown}
-                style={{
-                  color: "gold",
-                  fontSize: 20,
-                  position: "absolute",
-                  top: 8,
-                  right: 8,
-                }}
-              />
-            ) : isTop10 ? (
-              <Chip
-                label={
-                  <>
-                    <StarIcon
-                      sx={{ fontSize: 16, mr: 0.5, color: "silver" }}
-                    />
-                    {index + 1}
-                  </>
-                }
-                size="small"
-                sx={{
-                  position: "absolute",
-                  top: 8,
-                  right: 8,
-                  bgcolor: "gold",
-                  color: "#000",
-                  fontWeight: "bold",
-                }}
-              />
-            ) : null}
-
-            {/* Plot Body */}
-            <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
-              <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
-                <Avatar
-                  alt={plot.user.fullName}
-                  src={plot.user.image}
-                  sx={{ width: 36, height: 36, mr: 1 }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/profile/${plot.user.id}`);
+            return (
+              <React.Fragment key={plot.id}>
+                <ListItem
+                  alignItems="flex-start"
+                  onClick={() => navigate(`/plot/${plot.id}`)}
+                  sx={{
+                    px: 1,
+                    py: 1,
+                    borderRadius: 2,
+                    position: "relative",
+                    mb: 0.5,
+                    cursor: "pointer",
+                    transition: "0.3s",
+                    boxShadow: isTop1
+                      ? "0 4px 18px rgba(255, 215, 0, 0.5)"
+                      : "0 1px 6px rgba(0, 123, 255, 0.15)",
+                    border: isTop1
+                      ? "2px solid gold"
+                      : isTop10
+                      ? "1px solid gold"
+                      : "1px solid #eee",
+                    "&:hover": {
+                      boxShadow: isTop1
+                        ? "0 6px 25px rgba(255, 215, 0, 0.75)"
+                        : isTop10
+                        ? "0 4px 14px rgba(255, 215, 0, 0.4)"
+                        : "0 2px 12px rgba(0, 123, 255, 0.3)",
+                      bgcolor: "rgba(0, 123, 255, 0.05)",
+                    },
                   }}
-                />
-                <Typography variant="body2" fontWeight={600} noWrap>
-                  {plot.user.fullName.length > 10
-                    ? plot.user.fullName.slice(0, 10) + "..."
-                    : plot.user.fullName}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ ml: 1 }}
                 >
-                  {renderTimeAgo(plot)}
-                </Typography>
-              </Box>
+                  {/* Crown or Star Rank */}
+                  {isTop1 ? (
+                    <FontAwesomeIcon
+                      icon={faCrown}
+                      style={{
+                        color: "gold",
+                        fontSize: 20,
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
+                      }}
+                    />
+                  ) : isTop10 ? (
+                    <Chip
+                      label={
+                        <>
+                          <StarIcon sx={{ fontSize: 16, mr: 0.5, color: "silver" }} />
+                          {top10PlotIds.indexOf(plot.id) + 1}
+                        </>
+                      }
+                      size="small"
+                      sx={{
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
+                        bgcolor: "gold",
+                        color: "#000",
+                        fontWeight: "bold",
+                      }}
+                    />
+                  ) : null}
 
-              <Typography
-                variant="body2"
-                sx={{ mt: 0.5 }}
-                color="text.primary"
-              >
-                {plot.content.length > 100
-                  ? plot.content.slice(0, 100) + "..."
-                  : plot.content}
-              </Typography>
+                  {/* Plot Body */}
+                  <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
+                      <Avatar
+                        alt={plot.user.fullName}
+                        src={plot.user.image}
+                        sx={{ width: 36, height: 36, mr: 1 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/profile/${plot.user.id}`);
+                        }}
+                      />
+                      <Typography variant="body2" fontWeight={600} noWrap>
+                        {plot.user.fullName.length > 10
+                          ? plot.user.fullName.slice(0, 10) + "..."
+                          : plot.user.fullName}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ ml: 1 }}
+                      >
+                        {renderTimeAgo(plot)}
+                      </Typography>
+                    </Box>
 
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ mt: 0.7, fontSize: "11px" }}
-              >
-                {formatNumber(plot.totalLikes)} Likes •{" "}
-                {formatNumber(plot.totalReplot)} Replots •{" "}
-                {formatNumber(plot.totalCollects)} Collects •{" "}
-                {formatNumber(plot.views)} Views
-              </Typography>
-            </Box>
-          </ListItem>
-          <Divider component="li" sx={{ my: 0.5 }} />
-        </React.Fragment>
-      );
-    })}
-  </List>
-) : (
-  <Typography
-    align="center"
-    color="text.secondary"
-    sx={{ mt: 4, fontStyle: "italic" }}
-  >
-    No plots found.
-  </Typography>
-)}
+                    <Typography
+                      variant="body2"
+                      sx={{ mt: 0.5 }}
+                      color="text.primary"
+                    >
+                      {plot.content.length > 100
+                        ? plot.content.slice(0, 100) + "..."
+                        : plot.content}
+                    </Typography>
 
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ mt: 0.7, fontSize: "11px" }}
+                    >
+                      {formatNumber(plot.totalLikes)} Likes •{" "}
+                      {formatNumber(plot.totalReplot)} Replots •{" "}
+                      {formatNumber(plot.totalCollects)} Collects •{" "}
+                      {formatNumber(plot.views)} Views
+                    </Typography>
+                  </Box>
+                </ListItem>
+                <Divider component="li" sx={{ my: 0.5 }} />
+              </React.Fragment>
+            );
+          })}
+        </List>
+      ) : (
+        <Typography
+          align="center"
+          color="text.secondary"
+          sx={{ mt: 4, fontStyle: "italic" }}
+        >
+          No plots found.
+        </Typography>
+      )}
     </Box>
   );
 };

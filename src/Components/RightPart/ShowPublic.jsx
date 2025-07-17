@@ -31,30 +31,46 @@ const ShowPublic = () => {
     fetchUsers();
   }, []);
 
-  const sortedUsers = [...users].sort((a, b) => {
+  // 🔥 Get the top follower globally (only one)
+const topFollowerId =
+  users.length > 0
+    ? users.reduce((top, current) => {
+        if (current.followerCount > top.followerCount) return current;
+        if (current.followerCount === top.followerCount) {
+          return new Date(current.created_at) > new Date(top.created_at)
+            ? current
+            : top;
+        }
+        return top;
+      }).id
+    : null;
+
+  // Filtered and sorted users (by search, then sort by follower count)
+  const filteredUsers = users.filter(
+    (user) =>
+      user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const sortedFilteredUsers = [...filteredUsers].sort((a, b) => {
     if (b.followerCount !== a.followerCount) {
       return b.followerCount - a.followerCount;
     }
     return new Date(b.created_at) - new Date(a.created_at);
   });
 
-  const filteredUsers = sortedUsers.filter(
-    (user) =>
-      user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <Box sx={{ p: 2, maxWidth: 600, mx: "auto" }}>
       <Typography
-              variant="h5"
-              fontWeight="bold"
-              mb={3}
-              textAlign="left"
-              color="primary"
-            >
-            Public
-            </Typography>
+        variant="h5"
+        fontWeight="bold"
+        mb={3}
+        textAlign="left"
+        color="primary"
+      >
+        Public
+      </Typography>
+
       {/* Search input */}
       <Box sx={{ position: "relative", mb: 2 }}>
         <input
@@ -91,13 +107,13 @@ const ShowPublic = () => {
         <Typography variant="body2" color="text.secondary" align="center" mt={5}>
           😔 No users available.
         </Typography>
-      ) : filteredUsers.length === 0 ? (
+      ) : sortedFilteredUsers.length === 0 ? (
         <Typography variant="body2" color="text.secondary" align="center" mt={5}>
           🔍 No users found.
         </Typography>
       ) : (
         <List>
-          {filteredUsers.map((user, index) => (
+          {sortedFilteredUsers.map((user) => (
             <React.Fragment key={user.id}>
               <ListItem
                 alignItems="center"
@@ -107,13 +123,13 @@ const ShowPublic = () => {
                   borderRadius: 2,
                   transition: "0.3s",
                   boxShadow:
-                    index === 0
-                      ? "0 4px 20px rgba(255, 215, 0, 0.6)" // Gold shadow top 1
+                    user.id === topFollowerId
+                      ? "0 4px 20px rgba(255, 215, 0, 0.6)" // Gold for top follower
                       : "0 1px 6px rgba(0, 123, 255, 0.15)",
                   "&:hover": {
                     boxShadow:
-                      index === 0
-                        ? "0 6px 25px rgba(255, 215, 0, 0.9)" // Stronger gold hover top 1
+                      user.id === topFollowerId
+                        ? "0 6px 25px rgba(255, 215, 0, 0.9)" // Gold hover
                         : "0 2px 12px rgba(0, 123, 255, 0.3)",
                     bgcolor: "rgba(0, 123, 255, 0.05)",
                   },
