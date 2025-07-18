@@ -20,7 +20,7 @@ const Authentication = () => {
       {/* Left Panel with lighter colors and upgraded content */}
       <div className="hidden lg:flex flex-col justify-center items-start text-gray-100 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 w-1/2 h-full p-16 rounded-r-3xl shadow-xl space-y-10">
         <h1 className="text-5xl font-extrabold leading-tight max-w-xl drop-shadow-md">
-          Plot.com
+     <img src="/Logo1.png" alt="Logo" style={{ width: "60%", height: "auto" }} />  Plot.com
         </h1>
 
         <p className="text-lg max-w-lg opacity-90 leading-relaxed drop-shadow-sm">
